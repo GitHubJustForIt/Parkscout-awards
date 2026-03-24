@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Park Scout Awards 2026 — Roblox TPT2</title>
+  <link rel="stylesheet" href="styles.css">
+  <meta name="description" content="Vote for the best parks, rides, and experiences in Roblox Theme Park Tycoon 2 — Park Scout Awards 2026.">
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════
+     HEADER
+══════════════════════════════════════════════════════════ -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="logo-wrap">
+      <div class="logo-icon">
+        <!-- Trophy SVG -->
+        <svg viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M19 3L22.5 12H32L24.5 17.5L27.5 27L19 21.5L10.5 27L13.5 17.5L6 12H15.5L19 3Z"
+                fill="#c9a227" opacity="0.9"/>
+          <rect x="16" y="29" width="6" height="3" rx="1" fill="#c9a227" opacity="0.7"/>
+          <rect x="13" y="32" width="12" height="2.5" rx="1.25" fill="#c9a227" opacity="0.5"/>
+        </svg>
+      </div>
+      <div class="logo-text">
+        <span class="logo-title">Park Scout Awards</span>
+        <span class="logo-sub">Roblox · TPT2 · 2026</span>
+      </div>
+    </div>
+
+    <nav class="header-nav">
+      <a href="#vote" class="nav-link active">Vote</a>
+      <a href="#results" class="nav-link">Results</a>
+      <button class="nav-settings-btn" id="openSettingsBtn">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/>
+        </svg>
+        Settings
+      </button>
+    </nav>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════════════════════
+     HERO
+══════════════════════════════════════════════════════════ -->
+<section class="hero" id="home">
+  <div class="hero-badge">
+    <span class="hero-badge-dot"></span>
+    Voting Now Open · 2026 Edition
+  </div>
+
+  <h1 class="hero-title">
+    Park Scout Awards
+    <span>2026</span>
+  </h1>
+
+  <p class="hero-subtitle">The Premier Awards for Roblox Theme Parks</p>
+  <p class="hero-platform">Powered by <strong>Theme Park Tycoon 2</strong> · Community Choice</p>
+
+  <span class="gold-line"></span>
+
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <span class="hero-stat-num" id="stat-categories">—</span>
+      <span class="hero-stat-label">Categories</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-num" id="stat-nominees">—</span>
+      <span class="hero-stat-label">Nominees</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-num" id="stat-voters">—</span>
+      <span class="hero-stat-label">Voters</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-num" id="stat-voted">0/—</span>
+      <span class="hero-stat-label">Your Votes</span>
+    </div>
+  </div>
+</section>
+
+<span class="gold-line-full" style="display:block;max-width:1280px;margin:0 auto;"></span>
+
+<!-- ══════════════════════════════════════════════════════════
+     VOTING SECTION
+══════════════════════════════════════════════════════════ -->
+<main class="section" id="vote">
+  <div class="section-title-wrap">
+    <span class="section-eyebrow">Cast Your Ballot</span>
+    <h2 class="section-title">Vote by Category</h2>
+    <p class="section-sub">Select one nominee per category. You can change your vote at any time.</p>
+  </div>
+
+  <!-- Category Tabs -->
+  <div class="category-tabs-wrap">
+    <div class="category-tabs" id="categoryTabs">
+      <!-- Rendered by app.js -->
+      <div class="cat-tab active" style="opacity:0.4;pointer-events:none;">Loading…</div>
+    </div>
+  </div>
+
+  <!-- Nominee Panels -->
+  <div id="categoryPanels">
+    <!-- Rendered by app.js -->
+  </div>
+</main>
+
+<span class="gold-line-full" style="display:block;max-width:1280px;margin:0 auto;"></span>
+
+<!-- ══════════════════════════════════════════════════════════
+     LIVE RESULTS
+══════════════════════════════════════════════════════════ -->
+<section class="section" id="results">
+  <div class="section-title-wrap">
+    <span class="section-eyebrow">Live Standings</span>
+    <h2 class="section-title">Current Results</h2>
+    <p class="section-sub">Vote counts update in real time as the community votes.</p>
+  </div>
+
+  <div class="results-grid" id="resultsGrid">
+    <!-- Rendered by app.js -->
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════════════════════ -->
+<footer class="site-footer">
+  <div class="footer-logo">Park Scout Awards 2026</div>
+  <p class="footer-sub">Roblox · Theme Park Tycoon 2 · Community Edition</p>
+  <p style="margin-top:0.8rem;font-size:0.68rem;color:var(--text-dim);">
+    Inspired by the original Park Scout Awards · Fan-made project · Not affiliated with Roblox Corporation
+  </p>
+</footer>
+
+<!-- ══════════════════════════════════════════════════════════
+     VOTE TOAST
+══════════════════════════════════════════════════════════ -->
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <span class="toast-icon">🏆</span>
+  <div class="toast-text">
+    <strong>Vote Cast!</strong>
+    <span>Your vote has been recorded.</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     PASSWORD MODAL → Settings
+══════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="pwModal" role="dialog" aria-modal="true" aria-label="Settings Access">
+  <div class="modal">
+    <div style="text-align:center;font-size:2rem;margin-bottom:0.8rem;">🔐</div>
+    <div class="modal-title">Settings Access</div>
+    <div class="modal-sub">Enter the admin password to access the settings panel.</div>
+
+    <input type="password"
+           class="modal-input"
+           id="pwInput"
+           placeholder="Password"
+           autocomplete="off"
+           aria-label="Admin password">
+
+    <div class="modal-error" id="pwError">Incorrect password. Please try again.</div>
+
+    <button class="btn-primary" id="pwSubmitBtn">Enter Settings</button>
+    <span class="modal-cancel" id="pwCancelBtn">Cancel</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SCRIPTS
+══════════════════════════════════════════════════════════ -->
+<script src="app.js"></script>
+<script>
+  // Initialize page
+  document.addEventListener('DOMContentLoaded', () => {
+    PSA.initVotingPage();
+    PSA.initResultsSection();
+    PSA.initPasswordModal();
+
+    // Scroll spy for nav
+    const sections = document.querySelectorAll('section[id], main[id]');
+    const links    = document.querySelectorAll('.nav-link');
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const id = e.target.id;
+          links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + id));
+        }
+      });
+    }, { threshold: 0.4 });
+
+    sections.forEach(s => observer.observe(s));
+
+    // Smooth scroll for nav links
+    links.forEach(link => {
+      link.addEventListener('click', e => {
+        const href = link.getAttribute('href');
+        if (href && href.startsWith('#')) {
+          e.preventDefault();
+          document.querySelector(href)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  });
+</script>
+</body>
+</html>
