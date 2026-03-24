@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings — Park Scout Awards 2026</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════
+     HEADER
+══════════════════════════════════════════════════════════ -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="logo-wrap">
+      <div class="logo-icon">
+        <svg viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M19 3L22.5 12H32L24.5 17.5L27.5 27L19 21.5L10.5 27L13.5 17.5L6 12H15.5L19 3Z"
+                fill="#c9a227" opacity="0.9"/>
+          <rect x="16" y="29" width="6" height="3" rx="1" fill="#c9a227" opacity="0.7"/>
+          <rect x="13" y="32" width="12" height="2.5" rx="1.25" fill="#c9a227" opacity="0.5"/>
+        </svg>
+      </div>
+      <div class="logo-text">
+        <span class="logo-title">Park Scout Awards</span>
+        <span class="logo-sub">Admin Settings Panel</span>
+      </div>
+    </div>
+    <nav class="header-nav">
+      <a href="index.html" class="nav-link">
+        ← Back to Vote Page
+      </a>
+    </nav>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════════════════════
+     SETTINGS LAYOUT
+══════════════════════════════════════════════════════════ -->
+<div class="settings-layout">
+
+  <div class="settings-header">
+    <h1>⚙️ Settings Panel</h1>
+    <p>Manage parks, categories, nominees, and site configuration. All changes save to the browser's local storage and take effect immediately.</p>
+  </div>
+
+  <!-- ── Settings Tabs ────────────────────────────────────── -->
+  <div class="settings-tabs">
+    <div class="stab active" data-tab="general">General</div>
+    <div class="stab" data-tab="parks">Parks</div>
+    <div class="stab" data-tab="categories">Categories & Nominees</div>
+    <div class="stab" data-tab="security">Security</div>
+    <div class="stab" data-tab="data">Data & Reset</div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════
+       TAB: GENERAL
+  ════════════════════════════════════════════════════════ -->
+  <div class="stab-panel active" id="stab-general">
+
+    <div class="s-card">
+      <div class="s-card-header">
+        <span class="s-card-title">Site Information</span>
+        <span class="save-msg" id="save-msg-general">✓ Saved</span>
+      </div>
+
+      <div class="s-row">
+        <div>
+          <label class="s-label" for="gs-site-name">Site / Award Name</label>
+          <input class="s-input" id="gs-site-name" type="text" placeholder="Park Scout Awards 2026">
+        </div>
+        <div>
+          <label class="s-label" for="gs-subtitle">Subtitle</label>
+          <input class="s-input" id="gs-subtitle" type="text" placeholder="Roblox — Theme Park Tycoon 2">
+        </div>
+      </div>
+
+      <div class="s-row">
+        <div>
+          <label class="s-label" for="gs-voting-open">Voting Status</label>
+          <select class="s-select" id="gs-voting-open">
+            <option value="open">🟢 Voting Open — Public can vote</option>
+            <option value="closed">🔴 Voting Closed — Results view only</option>
+          </select>
+        </div>
+        <div style="display:flex;align-items:flex-end;">
+          <div class="info-box" style="margin-bottom:0;">
+            <span class="info-box-icon">ℹ️</span>
+            <span>When closed, visitors can still view live results but cannot cast votes.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-actions">
+      <button class="btn-save" onclick="PSA.saveGeneralSettings()">
+        💾 Save General Settings
+      </button>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════
+       TAB: PARKS
+  ════════════════════════════════════════════════════════ -->
+  <div class="stab-panel" id="stab-parks">
+
+    <div class="info-box">
+      <span class="info-box-icon">🎡</span>
+      <span>Parks are referenced in nominees. Add as many parks as you like. Each park has a name and an optional cover image URL (direct link to a .jpg, .png, or .webp image).</span>
+    </div>
+
+    <!-- Add New Park -->
+    <div class="s-card">
+      <div class="s-card-header">
+        <span class="s-card-title">Add a New Park</span>
+        <span class="save-msg" id="save-msg-parks">✓ Park Added</span>
+      </div>
+
+      <div class="s-row">
+        <div>
+          <label class="s-label" for="new-park-name">Park Name *</label>
+          <input class="s-input" id="new-park-name" type="text" placeholder="e.g. Dreamland Resort">
+        </div>
+        <div>
+          <label class="s-label" for="new-park-img">Park Image URL</label>
+          <input class="s-input" id="new-park-img" type="url" placeholder="https://example.com/park.jpg">
+        </div>
+      </div>
+
+      <div style="margin-top:0.5rem;">
+        <button class="btn-add" onclick="PSA.addPark()">+ Add Park</button>
+      </div>
+    </div>
+
+    <!-- Parks List -->
+    <div class="s-card">
+      <div class="s-card-header">
+        <span class="s-card-title">Configured Parks</span>
+      </div>
+      <div class="park-list" id="parks-list">
+        <!-- Rendered by app.js -->
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════
+       TAB: CATEGORIES & NOMINEES
+  ════════════════════════════════════════════════════════ -->
+  <div class="stab-panel" id="stab-categories">
+
+    <div class="info-box">
+      <span class="info-box-icon">📋</span>
+      <span>Each category (e.g. "Best Roller Coaster") can have any number of nominees. For coaster/ride categories, enter the ride name as the nominee name. Click a category to expand it and manage nominees.</span>
+    </div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem;">
+      <div style="font-size:0.82rem;color:var(--text-muted);">Expand a category to edit its name, icon, and nominees.</div>
+      <button class="btn-add" onclick="PSA.addCategory()">+ New Category</button>
+    </div>
+
+    <!-- Categories accordion -->
+    <div id="categories-list">
+      <!-- Rendered by app.js -->
+    </div>
+
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════
+       TAB: SECURITY
+  ════════════════════════════════════════════════════════ -->
+  <div class="stab-panel" id="stab-security">
+
+    <div class="s-card">
+      <div class="s-card-header">
+        <span class="s-card-title">Change Admin Password</span>
+        <span class="save-msg" id="save-msg-pw">✓ Password Changed</span>
+      </div>
+
+      <div class="info-box">
+        <span class="info-box-icon">🔐</span>
+        <span>The default password is <strong style="color:var(--gold);">admin2026</strong>. Change it to something only you know. The password is stored in the browser's local storage.</span>
+      </div>
+
+      <div class="s-row single">
+        <div>
+          <label class="s-label" for="pw-current">Current Password</label>
+          <input class="s-input" id="pw-current" type="password" placeholder="Current password" autocomplete="current-password">
+        </div>
+      </div>
+
+      <div class="s-row">
+        <div>
+          <label class="s-label" for="pw-new">New Password</label>
+          <input class="s-input" id="pw-new" type="password" placeholder="New password (min. 4 chars)" autocomplete="new-password">
+        </div>
+        <div>
+          <label class="s-label" for="pw-confirm">Confirm New Password</label>
+          <input class="s-input" id="pw-confirm" type="password" placeholder="Repeat new password" autocomplete="new-password">
+        </div>
+      </div>
+
+      <div class="modal-error" id="pw-error" style="margin-bottom:0.5rem;"></div>
+
+      <button class="btn-save" id="btn-change-pw">🔑 Change Password</button>
+    </div>
+
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════
+       TAB: DATA & RESET
+  ════════════════════════════════════════════════════════ -->
+  <div class="stab-panel" id="stab-data">
+
+    <div class="s-card">
+      <div class="s-card-header">
+        <span class="s-card-title">Vote Data</span>
+      </div>
+
+      <div class="info-box">
+        <span class="info-box-icon">⚠️</span>
+        <span>All data is stored in <strong>this browser's local storage</strong>. Votes from different browsers/devices are tracked separately per device. Resetting votes is permanent and cannot be undone.</span>
+      </div>
+
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:0.5rem;">
+        <button class="btn-danger" style="padding:0.7rem 1.4rem;font-size:0.8rem;"
+                onclick="PSA.resetAllVotes()">
+          🗑️ Reset All Votes
+        </button>
+        <button class="btn-outline" onclick="exportVotes()">
+          📥 Export Votes (JSON)
+        </button>
+        <button class="btn-outline" onclick="showVoteSummary()">
+          📊 View Vote Summary
+        </button>
+      </div>
+    </div>
+
+    <div class="s-card" style="border-color:rgba(192,57,43,0.3);">
+      <div class="s-card-header">
+        <span class="s-card-title" style="color:#e74c3c;">Danger Zone</span>
+      </div>
+      <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:1.2rem;">
+        Resetting to defaults will wipe all custom parks, categories, nominees, votes, and settings — restoring the factory defaults. This cannot be undone.
+      </p>
+      <button class="btn-danger" style="padding:0.7rem 1.4rem;font-size:0.8rem;"
+              onclick="PSA.resetToDefaults()">
+        ⚠️ Reset Everything to Defaults
+      </button>
+    </div>
+
+    <!-- Vote Summary Panel (hidden by default) -->
+    <div class="s-card" id="vote-summary-card" style="display:none;">
+      <div class="s-card-header">
+        <span class="s-card-title">Vote Summary</span>
+        <button class="btn-danger" onclick="document.getElementById('vote-summary-card').style.display='none'">✕ Close</button>
+      </div>
+      <div id="vote-summary-content" style="font-family:monospace;font-size:0.8rem;color:var(--text-muted);white-space:pre-wrap;word-break:break-all;background:rgba(0,0,0,0.2);padding:1rem;border-radius:8px;max-height:400px;overflow-y:auto;"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════════════════════ -->
+<footer class="site-footer">
+  <div class="footer-logo">Park Scout Awards 2026 · Admin Panel</div>
+  <p class="footer-sub">Changes are saved to local storage and take effect immediately</p>
+</footer>
+
+<!-- ══════════════════════════════════════════════════════════
+     SCRIPTS
+══════════════════════════════════════════════════════════ -->
+<script src="app.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Auth guard
+    PSA.guardSettings();
+
+    // Init settings UI
+    PSA.initSettingsPage();
+  });
+
+  /* Export votes as JSON */
+  function exportVotes() {
+    const raw = localStorage.getItem('psa2026_votes') || '{}';
+    const blob = new Blob([JSON.stringify(JSON.parse(raw), null, 2)], { type: 'application/json' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = 'psa2026_votes_export.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  /* Show vote summary */
+  function showVoteSummary() {
+    const STORAGE_KEYS = { config: 'psa2026_config', votes: 'psa2026_votes' };
+
+    function getConfig() {
+      try { const r = localStorage.getItem(STORAGE_KEYS.config); return r ? JSON.parse(r) : {}; } catch { return {}; }
+    }
+    function getVotes() {
+      try { const r = localStorage.getItem(STORAGE_KEYS.votes); return r ? JSON.parse(r) : {}; } catch { return {}; }
+    }
+
+    const cfg    = getConfig();
+    const votes  = getVotes();
+    const voters = Object.keys(votes).length;
+    let output   = `PARK SCOUT AWARDS 2026 — Vote Summary\n`;
+    output += `Generated: ${new Date().toLocaleString()}\n`;
+    output += `Total Voters: ${voters}\n`;
+    output += '─'.repeat(50) + '\n\n';
+
+    (cfg.categories || []).forEach(cat => {
+      const tally = {};
+      for (const vid in votes) {
+        const pick = votes[vid][cat.id];
+        if (pick) tally[pick] = (tally[pick] || 0) + 1;
+      }
+      const total = Object.values(tally).reduce((a, b) => a + b, 0);
+      output += `${cat.icon || '🎡'}  ${cat.name} (${total} votes)\n`;
+
+      const sorted = (cat.nominees || [])
+        .map(n => ({ name: n.name, park: n.park, votes: tally[n.id] || 0 }))
+        .sort((a, b) => b.votes - a.votes);
+
+      sorted.forEach((n, i) => {
+        const pct = total > 0 ? Math.round(n.votes / total * 100) : 0;
+        output += `  ${i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '  '} ${n.name} (${n.park}) — ${n.votes} votes (${pct}%)\n`;
+      });
+      output += '\n';
+    });
+
+    const card    = document.getElementById('vote-summary-card');
+    const content = document.getElementById('vote-summary-content');
+    if (content) content.textContent = output;
+    if (card)    card.style.display  = 'block';
+    card?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+</script>
+</body>
+</html>
