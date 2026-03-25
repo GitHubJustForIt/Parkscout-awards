@@ -9,204 +9,252 @@
 </head>
 <body>
 
-<!-- ══════════════════════════════════════════════════════════
+<!-- ================================================================
      HEADER
-══════════════════════════════════════════════════════════ -->
+     ================================================================ -->
 <header class="site-header">
   <div class="header-inner">
-    <div class="logo-wrap">
-      <div class="logo-icon">
-        <!-- Trophy SVG -->
-        <svg viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M19 3L22.5 12H32L24.5 17.5L27.5 27L19 21.5L10.5 27L13.5 17.5L6 12H15.5L19 3Z"
-                fill="#c9a227" opacity="0.9"/>
-          <rect x="16" y="29" width="6" height="3" rx="1" fill="#c9a227" opacity="0.7"/>
-          <rect x="13" y="32" width="12" height="2.5" rx="1.25" fill="#c9a227" opacity="0.5"/>
-        </svg>
-      </div>
-      <div class="logo-text">
-        <span class="logo-title">Park Scout Awards</span>
-        <span class="logo-sub">Roblox · TPT2 · 2026</span>
+
+    <div class="header-brand">
+      <!-- Trophy Icon -->
+      <svg class="header-trophy" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10 4 L22 4 L22 14 C22 18.42 19.31 22 16 22 C12.69 22 10 18.42 10 14 Z"
+              stroke="#c8a84b" stroke-width="1.6" stroke-linejoin="round" fill="none"/>
+        <path d="M10 7 C10 7 6 7 6 11 C6 13.5 7.8 15.5 10 16.5"
+              stroke="#c8a84b" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+        <path d="M22 7 C22 7 26 7 26 11 C26 13.5 24.2 15.5 22 16.5"
+              stroke="#c8a84b" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+        <line x1="16" y1="22" x2="16" y2="27" stroke="#c8a84b" stroke-width="1.6" stroke-linecap="round"/>
+        <line x1="12" y1="27" x2="20" y2="27" stroke="#c8a84b" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+
+      <div class="header-text">
+        <span class="header-title">Park Scout Awards</span>
+        <span class="header-sub">Roblox · Theme Park Tycoon 2 · 2026</span>
       </div>
     </div>
 
-    <nav class="header-nav">
-      <a href="#vote" class="nav-link active">Vote</a>
-      <a href="#results" class="nav-link">Results</a>
-      <button class="nav-settings-btn" id="openSettingsBtn">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/>
-        </svg>
+    <div class="header-right">
+      <a href="settings.html" class="header-btn">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
         Settings
-      </button>
-    </nav>
+      </a>
+    </div>
+
   </div>
 </header>
 
-<!-- ══════════════════════════════════════════════════════════
-     HERO
-══════════════════════════════════════════════════════════ -->
-<section class="hero" id="home">
-  <div class="hero-badge">
-    <span class="hero-badge-dot"></span>
-    Voting Now Open · 2026 Edition
-  </div>
+<div class="page-wrap">
 
-  <h1 class="hero-title">
-    Park Scout Awards
-    <span>2026</span>
-  </h1>
+  <!-- ================================================================
+       INTRO SCREEN
+       ================================================================ -->
+  <section id="screen-intro">
 
-  <p class="hero-subtitle">The Premier Awards for Roblox Theme Parks</p>
-  <p class="hero-platform">Powered by <strong>Theme Park Tycoon 2</strong> · Community Choice</p>
-
-  <span class="gold-line"></span>
-
-  <div class="hero-stats">
-    <div class="hero-stat">
-      <span class="hero-stat-num" id="stat-categories">—</span>
-      <span class="hero-stat-label">Categories</span>
+    <div class="intro-badge">
+      <span class="intro-badge-dot"></span>
+      Community Voting · Open Now
     </div>
-    <div class="hero-stat">
-      <span class="hero-stat-num" id="stat-nominees">—</span>
-      <span class="hero-stat-label">Nominees</span>
-    </div>
-    <div class="hero-stat">
-      <span class="hero-stat-num" id="stat-voters">—</span>
-      <span class="hero-stat-label">Voters</span>
-    </div>
-    <div class="hero-stat">
-      <span class="hero-stat-num" id="stat-voted">0/—</span>
-      <span class="hero-stat-label">Your Votes</span>
-    </div>
-  </div>
-</section>
 
-<span class="gold-line-full" style="display:block;max-width:1280px;margin:0 auto;"></span>
+    <div class="intro-trophy-wrap">
+      <div class="intro-trophy-glow"></div>
+      <svg class="intro-trophy" viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M27 12 L63 12 L63 44 C63 56 54.94 66 45 66 C35.06 66 27 56 27 44 Z"
+              stroke="#c8a84b" stroke-width="2.5" stroke-linejoin="round"/>
+        <path d="M27 20 C27 20 14 20 14 32 C14 39 19 44 27 47"
+              stroke="#c8a84b" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M63 20 C63 20 76 20 76 32 C76 39 71 44 63 47"
+              stroke="#c8a84b" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="45" y1="66" x2="45" y2="78" stroke="#c8a84b" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="33" y1="78" x2="57" y2="78" stroke="#c8a84b" stroke-width="3" stroke-linecap="round"/>
+        <!-- Stars -->
+        <path d="M35 36 L37 40 L41 40 L38 43 L39 47 L35 44.5 L31 47 L32 43 L29 40 L33 40 Z"
+              stroke="#e4c96e" stroke-width="1" fill="rgba(200,168,75,0.3)"/>
+        <path d="M55 36 L57 40 L61 40 L58 43 L59 47 L55 44.5 L51 47 L52 43 L49 40 L53 40 Z"
+              stroke="#e4c96e" stroke-width="1" fill="rgba(200,168,75,0.3)"/>
+      </svg>
+    </div>
 
-<!-- ══════════════════════════════════════════════════════════
-     VOTING SECTION
-══════════════════════════════════════════════════════════ -->
-<main class="section" id="vote">
-  <div class="section-title-wrap">
-    <span class="section-eyebrow">Cast Your Ballot</span>
-    <h2 class="section-title">Vote by Category</h2>
-    <p class="section-sub">Select one nominee per category. You can change your vote at any time.</p>
-  </div>
+    <p class="intro-eyebrow">The Official Community Awards</p>
+    <h1 class="intro-title">
+      Park Scout Awards
+      <span class="intro-title-year">2026</span>
+    </h1>
+    <p class="intro-platform">Roblox · <strong>Theme Park Tycoon 2</strong></p>
 
-  <!-- Category Tabs -->
-  <div class="category-tabs-wrap">
-    <div class="category-tabs" id="categoryTabs">
+    <div class="intro-divider">
+      <div class="gold-rule-center"><div class="diamond-sep"></div></div>
+    </div>
+
+    <p class="intro-desc">
+      Cast your vote across 12 categories and help decide the best parks, rides,
+      shows, and experiences in Roblox TPT2. Your ballot is submitted once —
+      choose wisely.
+    </p>
+
+    <button class="btn-start" id="btn-start-voting">
+      Begin Voting
+      <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </button>
+
+    <p class="intro-note">
+      <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      Each person may vote once. Votes are anonymous and final.
+    </p>
+
+  </section>
+
+  <!-- ================================================================
+       ALREADY VOTED SCREEN
+       ================================================================ -->
+  <section id="screen-already-voted" style="display:none;">
+
+    <div class="voted-icon-wrap">
+      <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+
+    <h2 class="voted-title">You've Already Voted</h2>
+    <p class="voted-desc">
+      Your ballot has been submitted for the Park Scout Awards 2026. Thank you
+      for participating — results will be announced when voting closes.
+      <br><br>
+      To keep the results fair, each participant may only vote once.
+    </p>
+
+  </section>
+
+  <!-- ================================================================
+       VOTING WIZARD
+       ================================================================ -->
+  <section id="screen-voting" style="display:none;">
+
+    <!-- Progress -->
+    <div class="progress-header">
+      <div class="progress-meta">
+        <span class="progress-label">Park Scout Awards 2026</span>
+        <span class="progress-count">
+          Category <span id="progress-current">1</span> of <span id="progress-total">12</span>
+        </span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+      </div>
+    </div>
+
+    <!-- Category Header -->
+    <div class="category-header">
+      <div class="cat-icon-wrap" id="cat-icon">
+        <!-- Injected by app.js -->
+      </div>
+      <span class="cat-eyebrow" id="cat-step-num">Category 1 of 12</span>
+      <h2 class="cat-title" id="cat-name">Loading…</h2>
+      <div class="cat-divider">
+        <div class="gold-rule-center"><div class="diamond-sep"></div></div>
+      </div>
+    </div>
+
+    <!-- Options -->
+    <div class="options-grid" id="options-grid">
       <!-- Rendered by app.js -->
-      <div class="cat-tab active" style="opacity:0.4;pointer-events:none;">Loading…</div>
     </div>
-  </div>
 
-  <!-- Nominee Panels -->
-  <div id="categoryPanels">
-    <!-- Rendered by app.js -->
-  </div>
-</main>
+    <!-- Navigation -->
+    <div class="wizard-nav">
+      <button class="btn-back" id="btn-back" disabled>
+        <svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        Back
+      </button>
 
-<span class="gold-line-full" style="display:block;max-width:1280px;margin:0 auto;"></span>
+      <button class="wizard-skip" id="btn-skip" type="button">Skip category</button>
 
-<!-- ══════════════════════════════════════════════════════════
-     LIVE RESULTS
-══════════════════════════════════════════════════════════ -->
-<section class="section" id="results">
-  <div class="section-title-wrap">
-    <span class="section-eyebrow">Live Standings</span>
-    <h2 class="section-title">Current Results</h2>
-    <p class="section-sub">Vote counts update in real time as the community votes.</p>
-  </div>
+      <button class="btn-next" id="btn-next" disabled>
+        <span id="next-label">Continue</span>
+        <svg viewBox="0 0 24 24" id="next-icon" style="width:14px;height:14px;stroke:currentColor;fill:none;flex-shrink:0;">
+          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </button>
+    </div>
 
-  <div class="results-grid" id="resultsGrid">
-    <!-- Rendered by app.js -->
-  </div>
-</section>
+  </section>
 
-<!-- ══════════════════════════════════════════════════════════
+  <!-- ================================================================
+       REVIEW SCREEN
+       ================================================================ -->
+  <section id="screen-review" style="display:none;">
+
+    <div class="review-header">
+      <span class="review-eyebrow">Review Your Selections</span>
+      <h2 class="review-title">Your Ballot</h2>
+      <p class="review-sub">Confirm your choices before submitting. Click the edit icon to change a vote.</p>
+      <div class="review-divider">
+        <div class="gold-rule-center"><div class="diamond-sep"></div></div>
+      </div>
+    </div>
+
+    <div class="review-list" id="review-list">
+      <!-- Rendered by showReview() -->
+    </div>
+
+    <div class="review-actions">
+      <button class="btn-submit" id="btn-submit">
+        <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        Submit Ballot
+      </button>
+      <p class="submit-note">
+        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Once submitted, your vote cannot be changed.
+      </p>
+      <button class="review-back-btn" id="btn-review-back">Back to voting</button>
+    </div>
+
+  </section>
+
+  <!-- ================================================================
+       THANK YOU SCREEN
+       ================================================================ -->
+  <section id="screen-thanks" style="display:none;">
+
+    <!-- Trophy animation -->
+    <svg class="thanks-trophy" viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M27 12 L63 12 L63 44 C63 56 54.94 66 45 66 C35.06 66 27 56 27 44 Z"
+            stroke="#c8a84b" stroke-width="2.5" stroke-linejoin="round"/>
+      <path d="M27 20 C27 20 14 20 14 32 C14 39 19 44 27 47"
+            stroke="#c8a84b" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M63 20 C63 20 76 20 76 32 C76 39 71 44 63 47"
+            stroke="#c8a84b" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="45" y1="66" x2="45" y2="78" stroke="#c8a84b" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="33" y1="78" x2="57" y2="78" stroke="#c8a84b" stroke-width="3" stroke-linecap="round"/>
+    </svg>
+
+    <span class="thanks-eyebrow">Ballot Submitted Successfully</span>
+    <h2 class="thanks-title">Thank You!</h2>
+    <p class="thanks-sub">
+      Your vote for the Park Scout Awards 2026 has been recorded.
+      We appreciate your participation in the community.
+    </p>
+
+    <div class="thanks-divider">
+      <div class="gold-rule-center"><div class="diamond-sep"></div></div>
+    </div>
+
+    <div class="thanks-box">
+      <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      Please do not vote again from another device or browser — every ballot
+      counts and we want fair results for the entire community.
+    </div>
+
+  </section>
+
+</div><!-- /page-wrap -->
+
+<!-- ================================================================
      FOOTER
-══════════════════════════════════════════════════════════ -->
+     ================================================================ -->
 <footer class="site-footer">
-  <div class="footer-logo">Park Scout Awards 2026</div>
+  <div class="footer-title">Park Scout Awards 2026</div>
   <p class="footer-sub">Roblox · Theme Park Tycoon 2 · Community Edition</p>
-  <p style="margin-top:0.8rem;font-size:0.68rem;color:var(--text-dim);">
-    Inspired by the original Park Scout Awards · Fan-made project · Not affiliated with Roblox Corporation
-  </p>
 </footer>
 
-<!-- ══════════════════════════════════════════════════════════
-     VOTE TOAST
-══════════════════════════════════════════════════════════ -->
-<div class="toast" id="toast" role="status" aria-live="polite">
-  <span class="toast-icon">🏆</span>
-  <div class="toast-text">
-    <strong>Vote Cast!</strong>
-    <span>Your vote has been recorded.</span>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════════════════════
-     PASSWORD MODAL → Settings
-══════════════════════════════════════════════════════════ -->
-<div class="modal-overlay" id="pwModal" role="dialog" aria-modal="true" aria-label="Settings Access">
-  <div class="modal">
-    <div style="text-align:center;font-size:2rem;margin-bottom:0.8rem;">🔐</div>
-    <div class="modal-title">Settings Access</div>
-    <div class="modal-sub">Enter the admin password to access the settings panel.</div>
-
-    <input type="password"
-           class="modal-input"
-           id="pwInput"
-           placeholder="Password"
-           autocomplete="off"
-           aria-label="Admin password">
-
-    <div class="modal-error" id="pwError">Incorrect password. Please try again.</div>
-
-    <button class="btn-primary" id="pwSubmitBtn">Enter Settings</button>
-    <span class="modal-cancel" id="pwCancelBtn">Cancel</span>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════════════════════
-     SCRIPTS
-══════════════════════════════════════════════════════════ -->
 <script src="app.js"></script>
-<script>
-  // Initialize page
-  document.addEventListener('DOMContentLoaded', () => {
-    PSA.initVotingPage();
-    PSA.initResultsSection();
-    PSA.initPasswordModal();
-
-    // Scroll spy for nav
-    const sections = document.querySelectorAll('section[id], main[id]');
-    const links    = document.querySelectorAll('.nav-link');
-
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          const id = e.target.id;
-          links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + id));
-        }
-      });
-    }, { threshold: 0.4 });
-
-    sections.forEach(s => observer.observe(s));
-
-    // Smooth scroll for nav links
-    links.forEach(link => {
-      link.addEventListener('click', e => {
-        const href = link.getAttribute('href');
-        if (href && href.startsWith('#')) {
-          e.preventDefault();
-          document.querySelector(href)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      });
-    });
-  });
-</script>
 </body>
 </html>
