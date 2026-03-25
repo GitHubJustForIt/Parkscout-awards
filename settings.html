@@ -8,338 +8,669 @@
 </head>
 <body>
 
-<!-- ══════════════════════════════════════════════════════════
+<!-- ================================================================
      HEADER
-══════════════════════════════════════════════════════════ -->
+     ================================================================ -->
 <header class="site-header">
   <div class="header-inner">
-    <div class="logo-wrap">
-      <div class="logo-icon">
-        <svg viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M19 3L22.5 12H32L24.5 17.5L27.5 27L19 21.5L10.5 27L13.5 17.5L6 12H15.5L19 3Z"
-                fill="#c9a227" opacity="0.9"/>
-          <rect x="16" y="29" width="6" height="3" rx="1" fill="#c9a227" opacity="0.7"/>
-          <rect x="13" y="32" width="12" height="2.5" rx="1.25" fill="#c9a227" opacity="0.5"/>
-        </svg>
-      </div>
-      <div class="logo-text">
-        <span class="logo-title">Park Scout Awards</span>
-        <span class="logo-sub">Admin Settings Panel</span>
+    <div class="header-brand">
+      <svg class="header-trophy" viewBox="0 0 32 32" fill="none">
+        <path d="M10 4 L22 4 L22 14 C22 18.42 19.31 22 16 22 C12.69 22 10 18.42 10 14 Z"
+              stroke="#c8a84b" stroke-width="1.6" fill="none"/>
+        <path d="M10 7 C10 7 6 7 6 11 C6 13.5 7.8 15.5 10 16.5"
+              stroke="#c8a84b" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+        <path d="M22 7 C22 7 26 7 26 11 C26 13.5 24.2 15.5 22 16.5"
+              stroke="#c8a84b" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+        <line x1="16" y1="22" x2="16" y2="27" stroke="#c8a84b" stroke-width="1.6" stroke-linecap="round"/>
+        <line x1="12" y1="27" x2="20" y2="27" stroke="#c8a84b" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+      <div class="header-text">
+        <span class="header-title">Park Scout Awards</span>
+        <span class="header-sub">Settings Panel</span>
       </div>
     </div>
-    <nav class="header-nav">
-      <a href="index.html" class="nav-link">
-        ← Back to Vote Page
+    <div class="header-right">
+      <a href="index.html" class="header-btn">
+        <svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        Back to Vote Page
       </a>
-    </nav>
+    </div>
   </div>
 </header>
 
-<!-- ══════════════════════════════════════════════════════════
-     SETTINGS LAYOUT
-══════════════════════════════════════════════════════════ -->
-<div class="settings-layout">
+<div class="settings-page">
+<div class="settings-wrap">
 
-  <div class="settings-header">
-    <h1>⚙️ Settings Panel</h1>
-    <p>Manage parks, categories, nominees, and site configuration. All changes save to the browser's local storage and take effect immediately.</p>
+  <div class="settings-page-header">
+    <div>
+      <div class="settings-page-title">Settings</div>
+      <p class="settings-page-sub">Configure categories, nominees, images, and the Discord webhook. All changes are saved to local storage and take effect immediately on the voting page.</p>
+    </div>
+    <div class="settings-page-actions">
+      <button class="btn btn-gold" onclick="saveAll()">
+        <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        Save All
+      </button>
+      <button class="btn btn-ghost" onclick="resetToDefaults()">
+        <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg>
+        Reset Defaults
+      </button>
+    </div>
   </div>
 
-  <!-- ── Settings Tabs ────────────────────────────────────── -->
-  <div class="settings-tabs">
-    <div class="stab active" data-tab="general">General</div>
-    <div class="stab" data-tab="parks">Parks</div>
-    <div class="stab" data-tab="categories">Categories & Nominees</div>
-    <div class="stab" data-tab="security">Security</div>
-    <div class="stab" data-tab="data">Data & Reset</div>
+  <!-- ── Tabs ───────────────────────────────────────────── -->
+  <div class="s-tabs">
+    <button class="s-tab active" data-tab="categories">Categories &amp; Options</button>
+    <button class="s-tab" data-tab="general">General</button>
+    <button class="s-tab" data-tab="data">Data</button>
   </div>
 
-  <!-- ════════════════════════════════════════════════════════
+  <!-- ================================================================
+       TAB: CATEGORIES
+       ================================================================ -->
+  <div class="s-panel active" id="stab-categories">
+
+    <div class="s-info">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span>
+        Click a category row to expand it and manage its options. Each option can have a name,
+        a description (e.g. park name), and an optional image URL. The category icon is chosen
+        from the dropdown in the category row.
+      </span>
+    </div>
+
+    <div class="s-table-wrap">
+      <table class="s-table" id="categories-table">
+        <thead>
+          <tr>
+            <th style="width:36px;">#</th>
+            <th style="width:44px;">Icon</th>
+            <th>Category Name</th>
+            <th style="width:90px; text-align:center;">Options</th>
+            <th style="width:110px; text-align:right;">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="categories-tbody">
+          <!-- Rendered by JS -->
+        </tbody>
+      </table>
+    </div>
+
+    <button class="btn btn-outline-gold" onclick="addCategory()">
+      <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Add Category
+    </button>
+
+  </div>
+
+  <!-- ================================================================
        TAB: GENERAL
-  ════════════════════════════════════════════════════════ -->
-  <div class="stab-panel active" id="stab-general">
+       ================================================================ -->
+  <div class="s-panel" id="stab-general">
 
-    <div class="s-card">
-      <div class="s-card-header">
-        <span class="s-card-title">Site Information</span>
-        <span class="save-msg" id="save-msg-general">✓ Saved</span>
+    <div class="s-table-wrap" style="padding:1.5rem;">
+      <div style="margin-bottom:1.5rem;">
+        <label class="s-label" for="setting-webhook">Discord Webhook URL</label>
+        <input class="s-input" id="setting-webhook" type="url"
+               placeholder="https://discord.com/api/webhooks/...">
+        <p style="font-size:0.72rem;color:var(--text-3);margin-top:6px;">
+          All votes are sent to this webhook as a Discord embed. Do not share this URL publicly.
+        </p>
       </div>
 
-      <div class="s-row">
-        <div>
-          <label class="s-label" for="gs-site-name">Site / Award Name</label>
-          <input class="s-input" id="gs-site-name" type="text" placeholder="Park Scout Awards 2026">
-        </div>
-        <div>
-          <label class="s-label" for="gs-subtitle">Subtitle</label>
-          <input class="s-input" id="gs-subtitle" type="text" placeholder="Roblox — Theme Park Tycoon 2">
-        </div>
-      </div>
-
-      <div class="s-row">
-        <div>
-          <label class="s-label" for="gs-voting-open">Voting Status</label>
-          <select class="s-select" id="gs-voting-open">
-            <option value="open">🟢 Voting Open — Public can vote</option>
-            <option value="closed">🔴 Voting Closed — Results view only</option>
-          </select>
-        </div>
-        <div style="display:flex;align-items:flex-end;">
-          <div class="info-box" style="margin-bottom:0;">
-            <span class="info-box-icon">ℹ️</span>
-            <span>When closed, visitors can still view live results but cannot cast votes.</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="settings-actions">
-      <button class="btn-save" onclick="PSA.saveGeneralSettings()">
-        💾 Save General Settings
-      </button>
-    </div>
-  </div>
-
-  <!-- ════════════════════════════════════════════════════════
-       TAB: PARKS
-  ════════════════════════════════════════════════════════ -->
-  <div class="stab-panel" id="stab-parks">
-
-    <div class="info-box">
-      <span class="info-box-icon">🎡</span>
-      <span>Parks are referenced in nominees. Add as many parks as you like. Each park has a name and an optional cover image URL (direct link to a .jpg, .png, or .webp image).</span>
-    </div>
-
-    <!-- Add New Park -->
-    <div class="s-card">
-      <div class="s-card-header">
-        <span class="s-card-title">Add a New Park</span>
-        <span class="save-msg" id="save-msg-parks">✓ Park Added</span>
-      </div>
-
-      <div class="s-row">
-        <div>
-          <label class="s-label" for="new-park-name">Park Name *</label>
-          <input class="s-input" id="new-park-name" type="text" placeholder="e.g. Dreamland Resort">
-        </div>
-        <div>
-          <label class="s-label" for="new-park-img">Park Image URL</label>
-          <input class="s-input" id="new-park-img" type="url" placeholder="https://example.com/park.jpg">
-        </div>
-      </div>
-
-      <div style="margin-top:0.5rem;">
-        <button class="btn-add" onclick="PSA.addPark()">+ Add Park</button>
-      </div>
-    </div>
-
-    <!-- Parks List -->
-    <div class="s-card">
-      <div class="s-card-header">
-        <span class="s-card-title">Configured Parks</span>
-      </div>
-      <div class="park-list" id="parks-list">
-        <!-- Rendered by app.js -->
-      </div>
-    </div>
-
-  </div>
-
-  <!-- ════════════════════════════════════════════════════════
-       TAB: CATEGORIES & NOMINEES
-  ════════════════════════════════════════════════════════ -->
-  <div class="stab-panel" id="stab-categories">
-
-    <div class="info-box">
-      <span class="info-box-icon">📋</span>
-      <span>Each category (e.g. "Best Roller Coaster") can have any number of nominees. For coaster/ride categories, enter the ride name as the nominee name. Click a category to expand it and manage nominees.</span>
-    </div>
-
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem;">
-      <div style="font-size:0.82rem;color:var(--text-muted);">Expand a category to edit its name, icon, and nominees.</div>
-      <button class="btn-add" onclick="PSA.addCategory()">+ New Category</button>
-    </div>
-
-    <!-- Categories accordion -->
-    <div id="categories-list">
-      <!-- Rendered by app.js -->
-    </div>
-
-  </div>
-
-  <!-- ════════════════════════════════════════════════════════
-       TAB: SECURITY
-  ════════════════════════════════════════════════════════ -->
-  <div class="stab-panel" id="stab-security">
-
-    <div class="s-card">
-      <div class="s-card-header">
-        <span class="s-card-title">Change Admin Password</span>
-        <span class="save-msg" id="save-msg-pw">✓ Password Changed</span>
-      </div>
-
-      <div class="info-box">
-        <span class="info-box-icon">🔐</span>
-        <span>The default password is <strong style="color:var(--gold);">admin2026</strong>. Change it to something only you know. The password is stored in the browser's local storage.</span>
-      </div>
-
-      <div class="s-row single">
-        <div>
-          <label class="s-label" for="pw-current">Current Password</label>
-          <input class="s-input" id="pw-current" type="password" placeholder="Current password" autocomplete="current-password">
-        </div>
-      </div>
-
-      <div class="s-row">
-        <div>
-          <label class="s-label" for="pw-new">New Password</label>
-          <input class="s-input" id="pw-new" type="password" placeholder="New password (min. 4 chars)" autocomplete="new-password">
-        </div>
-        <div>
-          <label class="s-label" for="pw-confirm">Confirm New Password</label>
-          <input class="s-input" id="pw-confirm" type="password" placeholder="Repeat new password" autocomplete="new-password">
-        </div>
-      </div>
-
-      <div class="modal-error" id="pw-error" style="margin-bottom:0.5rem;"></div>
-
-      <button class="btn-save" id="btn-change-pw">🔑 Change Password</button>
-    </div>
-
-  </div>
-
-  <!-- ════════════════════════════════════════════════════════
-       TAB: DATA & RESET
-  ════════════════════════════════════════════════════════ -->
-  <div class="stab-panel" id="stab-data">
-
-    <div class="s-card">
-      <div class="s-card-header">
-        <span class="s-card-title">Vote Data</span>
-      </div>
-
-      <div class="info-box">
-        <span class="info-box-icon">⚠️</span>
-        <span>All data is stored in <strong>this browser's local storage</strong>. Votes from different browsers/devices are tracked separately per device. Resetting votes is permanent and cannot be undone.</span>
-      </div>
-
-      <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:0.5rem;">
-        <button class="btn-danger" style="padding:0.7rem 1.4rem;font-size:0.8rem;"
-                onclick="PSA.resetAllVotes()">
-          🗑️ Reset All Votes
+      <div style="display:flex;gap:0.7rem;">
+        <button class="btn btn-gold" onclick="saveGeneral()">
+          <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          Save
         </button>
-        <button class="btn-outline" onclick="exportVotes()">
-          📥 Export Votes (JSON)
-        </button>
-        <button class="btn-outline" onclick="showVoteSummary()">
-          📊 View Vote Summary
+        <button class="btn btn-ghost" onclick="testWebhook()">
+          <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          Send Test Message
         </button>
       </div>
+
+      <div id="webhook-feedback" style="margin-top:1rem;font-size:0.8rem;color:var(--text-2);display:none;"></div>
     </div>
 
-    <div class="s-card" style="border-color:rgba(192,57,43,0.3);">
-      <div class="s-card-header">
-        <span class="s-card-title" style="color:#e74c3c;">Danger Zone</span>
-      </div>
-      <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:1.2rem;">
-        Resetting to defaults will wipe all custom parks, categories, nominees, votes, and settings — restoring the factory defaults. This cannot be undone.
+    <div class="s-table-wrap" style="padding:1.5rem;margin-top:1rem;">
+      <label class="s-label">Voting Lock</label>
+      <p style="font-size:0.8rem;color:var(--text-2);margin-bottom:1rem;">
+        Lock voting so no new ballots can be submitted (useful after the deadline).
       </p>
-      <button class="btn-danger" style="padding:0.7rem 1.4rem;font-size:0.8rem;"
-              onclick="PSA.resetToDefaults()">
-        ⚠️ Reset Everything to Defaults
-      </button>
-    </div>
-
-    <!-- Vote Summary Panel (hidden by default) -->
-    <div class="s-card" id="vote-summary-card" style="display:none;">
-      <div class="s-card-header">
-        <span class="s-card-title">Vote Summary</span>
-        <button class="btn-danger" onclick="document.getElementById('vote-summary-card').style.display='none'">✕ Close</button>
+      <div style="display:flex;align-items:center;gap:1rem;">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.85rem;color:var(--text);">
+          <input type="checkbox" id="setting-locked" style="accent-color:var(--gold);width:16px;height:16px;">
+          Voting is currently locked
+        </label>
       </div>
-      <div id="vote-summary-content" style="font-family:monospace;font-size:0.8rem;color:var(--text-muted);white-space:pre-wrap;word-break:break-all;background:rgba(0,0,0,0.2);padding:1rem;border-radius:8px;max-height:400px;overflow-y:auto;"></div>
+      <div style="margin-top:1rem;">
+        <button class="btn btn-gold btn-sm" onclick="saveGeneral()">Save</button>
+      </div>
     </div>
 
   </div>
+
+  <!-- ================================================================
+       TAB: DATA
+       ================================================================ -->
+  <div class="s-panel" id="stab-data">
+
+    <div class="s-table-wrap" style="padding:1.5rem;margin-bottom:1rem;">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;color:var(--text);margin-bottom:0.8rem;">Export Configuration</div>
+      <p style="font-size:0.82rem;color:var(--text-2);margin-bottom:1.2rem;font-weight:300;">
+        Download the current categories and settings as a JSON file to back up or transfer your configuration.
+      </p>
+      <button class="btn btn-outline-gold" onclick="exportConfig()">
+        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download JSON
+      </button>
+    </div>
+
+    <div class="s-table-wrap" style="padding:1.5rem;margin-bottom:1rem;">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;color:var(--text);margin-bottom:0.8rem;">Import Configuration</div>
+      <p style="font-size:0.82rem;color:var(--text-2);margin-bottom:1.2rem;font-weight:300;">
+        Load a previously exported JSON file to restore a configuration.
+      </p>
+      <input type="file" id="import-file" accept=".json" style="display:none;" onchange="importConfig(event)">
+      <button class="btn btn-outline-gold" onclick="document.getElementById('import-file').click()">
+        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Load JSON
+      </button>
+    </div>
+
+    <div class="s-table-wrap" style="padding:1.5rem;border-color:rgba(176,58,46,0.3);">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;color:#e74c3c;margin-bottom:0.8rem;">Danger Zone</div>
+      <p style="font-size:0.82rem;color:var(--text-2);margin-bottom:1.2rem;font-weight:300;">
+        Reset all settings to factory defaults. This cannot be undone. The voted flag is also cleared.
+      </p>
+      <button class="btn btn-danger" onclick="resetToDefaults()">
+        <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Reset Everything
+      </button>
+    </div>
+
+  </div>
+
+</div><!-- /settings-wrap -->
+</div><!-- /settings-page -->
+
+<!-- Save toast -->
+<div class="save-toast" id="save-toast">
+  <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+  <span id="save-toast-msg">Settings saved successfully.</span>
 </div>
 
-<!-- ══════════════════════════════════════════════════════════
-     FOOTER
-══════════════════════════════════════════════════════════ -->
-<footer class="site-footer">
-  <div class="footer-logo">Park Scout Awards 2026 · Admin Panel</div>
-  <p class="footer-sub">Changes are saved to local storage and take effect immediately</p>
-</footer>
-
-<!-- ══════════════════════════════════════════════════════════
-     SCRIPTS
-══════════════════════════════════════════════════════════ -->
-<script src="app.js"></script>
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    // Auth guard
-    PSA.guardSettings();
+/* ================================================================
+   SETTINGS.JS — inline because it is the 4th script file
+   Table-based category and option editor.
+   ================================================================ */
+'use strict';
 
-    // Init settings UI
-    PSA.initSettingsPage();
+/* ── Storage ─────────────────────────────────────────────── */
+const STORE_KEY = 'psa2026_config';
+const VOTED_KEY = 'psa2026_voted';
+
+/* ── SVG Icons map (same as app.js, for icon selector preview) */
+const ICON_MAP = {
+  coaster:  `<svg viewBox="0 0 24 24" fill="none"><path d="M2 18 L6 10 L10 14 L14 6 L18 12 L22 8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor"/><circle cx="6" cy="10" r="1.5" fill="currentColor"/><circle cx="14" cy="6" r="1.5" fill="currentColor"/></svg>`,
+  darkride: `<svg viewBox="0 0 24 24" fill="none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke-width="1.8" stroke="currentColor"/></svg>`,
+  flatride: `<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke-width="1.8" stroke="currentColor"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3" stroke-width="1.8" stroke-linecap="round" stroke="currentColor"/><circle cx="12" cy="12" r="3" stroke-width="1.8" stroke="currentColor"/></svg>`,
+  water:    `<svg viewBox="0 0 24 24" fill="none"><path d="M2 12 C5 9 7 15 10 12 C13 9 15 15 18 12 C21 9 22 12 22 12M2 17 C5 14 7 20 10 17 C13 14 15 20 18 17 C21 14 22 17 22 17" stroke-width="1.8" stroke-linecap="round" stroke="currentColor"/></svg>`,
+  food:     `<svg viewBox="0 0 24 24" fill="none"><path d="M3 2v10c0 2.2 1.8 4 4 4v6M7 2v6M11 2c0 0 4 2 4 7c0 2-1.5 3.8-3.5 4.5V22" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor"/></svg>`,
+  show:     `<svg viewBox="0 0 24 24" fill="none"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor"/></svg>`,
+  theming:  `<svg viewBox="0 0 24 24" fill="none"><path d="M3 21V10L8 4L13 10V21ZM13 21V14L17 10L21 14V21" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor"/></svg>`,
+  new:      `<svg viewBox="0 0 24 24" fill="none"><polygon points="13,2 3,14 12,14 11,22 21,10 12,10" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor"/></svg>`,
+  family:   `<svg viewBox="0 0 24 24" fill="none"><circle cx="9" cy="5" r="2.5" stroke-width="1.8" stroke="currentColor"/><circle cx="16" cy="6" r="2" stroke-width="1.8" stroke="currentColor"/><path d="M4 20V14c0-2.2 2.2-4 5-4s5 1.8 5 4v6M16 20v-5c0-1.7 1.3-3 3-3h3" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor"/></svg>`,
+  scenery:  `<svg viewBox="0 0 24 24" fill="none"><path d="M2 20L7 11L12 16L15 12L22 20Z" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor"/><circle cx="17" cy="6" r="3" stroke-width="1.8" stroke="currentColor"/></svg>`,
+  trophy:   `<svg viewBox="0 0 24 24" fill="none"><path d="M8 21H16M12 17V21M7 4H17V11C17 14.31 14.76 17 12 17C9.24 17 7 14.31 7 11Z" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor"/><path d="M7 6C7 6 4 6 4 9C4 11 5.5 12.5 7 13M17 6C17 6 20 6 20 9C20 11 18.5 12.5 17 13" stroke-width="1.8" stroke-linecap="round" stroke="currentColor"/></svg>`,
+  heart:    `<svg viewBox="0 0 24 24" fill="none"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" stroke-width="1.8" stroke="currentColor"/></svg>`,
+  pin:      `<svg viewBox="0 0 24 24" fill="none"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke-width="1.8" stroke="currentColor"/><circle cx="12" cy="10" r="3" stroke-width="1.8" stroke="currentColor"/></svg>`,
+};
+
+const DEFAULT_CONFIG = {
+  webhookUrl: 'https://discord.com/api/webhooks/1486411564151079145/RUcUc0mPD-z3tq7tUDgUN0rOpfDlj8u8Z9b11rcixeBcO8GToTRNl9aialndjLiOARpI',
+  votingLocked: false,
+  categories: [
+    { id: 'cat_coaster',    icon: 'coaster',  name: 'Best Roller Coaster',        options: [{ id:'o1', name:'Thunder Dragon', description:'Dreamland Resort', image:'' },{ id:'o2', name:'Neon Rush', description:'Neon Valley Park', image:'' },{ id:'o3', name:'Crystal Fury', description:'Crystal Kingdom', image:'' }] },
+    { id: 'cat_dark',       icon: 'darkride', name: 'Best Dark Ride',              options: [{ id:'o4', name:'Phantom Chase', description:'Dreamland Resort', image:'' },{ id:'o5', name:'The Void', description:'Neon Valley Park', image:'' },{ id:'o6', name:'Crystal Depths', description:'Crystal Kingdom', image:'' }] },
+    { id: 'cat_flat',       icon: 'flatride', name: 'Best Flat Ride',              options: [{ id:'o7', name:'Gravity Spin', description:'Dreamland Resort', image:'' },{ id:'o8', name:'Neon Whirl', description:'Neon Valley Park', image:'' },{ id:'o9', name:'Ice Cyclone', description:'Crystal Kingdom', image:'' }] },
+    { id: 'cat_water',      icon: 'water',    name: 'Best Water Ride',             options: [{ id:'o10', name:'Tidal Wave', description:'Dreamland Resort', image:'' },{ id:'o11', name:'Crystal Falls', description:'Crystal Kingdom', image:'' },{ id:'o12', name:'Neon Splash', description:'Neon Valley Park', image:'' }] },
+    { id: 'cat_food',       icon: 'food',     name: 'Best Food & Beverage',        options: [{ id:'o13', name:'Dreamland Grill', description:'Dreamland Resort', image:'' },{ id:'o14', name:'Neon Bites', description:'Neon Valley Park', image:'' },{ id:'o15', name:'Crystal Café', description:'Crystal Kingdom', image:'' }] },
+    { id: 'cat_show',       icon: 'show',     name: 'Best Show & Entertainment',   options: [{ id:'o16', name:'Lights of Dreamland', description:'Dreamland Resort', image:'' },{ id:'o17', name:'Neon Nights Parade', description:'Neon Valley Park', image:'' },{ id:'o18', name:'Crystal Spectacular', description:'Crystal Kingdom', image:'' }] },
+    { id: 'cat_theming',    icon: 'theming',  name: 'Best Theme Area',             options: [{ id:'o19', name:'Dragon Realm', description:'Dreamland Resort', image:'' },{ id:'o20', name:'Cyber District', description:'Neon Valley Park', image:'' },{ id:'o21', name:'Ice Pinnacle', description:'Crystal Kingdom', image:'' }] },
+    { id: 'cat_new',        icon: 'new',      name: 'Best New Attraction 2026',    options: [{ id:'o22', name:'Hyper Loop X', description:'Dreamland Resort', image:'' },{ id:'o23', name:'Neon Skyrise', description:'Neon Valley Park', image:'' },{ id:'o24', name:'Frost Comet', description:'Crystal Kingdom', image:'' }] },
+    { id: 'cat_family',     icon: 'family',   name: 'Best Family Attraction',      options: [{ id:'o25', name:'Balloon Safari', description:'Dreamland Resort', image:'' },{ id:'o26', name:'Pixel Playground', description:'Neon Valley Park', image:'' },{ id:'o27', name:'Crystal Adventure', description:'Crystal Kingdom', image:'' }] },
+    { id: 'cat_scenery',    icon: 'scenery',  name: 'Best Scenery & Theming',      options: [{ id:'o28', name:'Enchanted Forest', description:'Dreamland Resort', image:'' },{ id:'o29', name:'Holographic Bay', description:'Neon Valley Park', image:'' },{ id:'o30', name:'Crystal Peaks', description:'Crystal Kingdom', image:'' }] },
+    { id: 'cat_overall',    icon: 'trophy',   name: 'Best Park Overall',           options: [{ id:'o31', name:'Dreamland Resort', description:'by Player123', image:'' },{ id:'o32', name:'Neon Valley Park', description:'by PlayerXYZ', image:'' },{ id:'o33', name:'Crystal Kingdom', description:'by CrystalBuild', image:'' }] },
+    { id: 'cat_experience', icon: 'heart',    name: 'Best Guest Experience',       options: [{ id:'o34', name:'Dreamland Resort', description:'Dreamland Resort', image:'' },{ id:'o35', name:'Neon Valley Park', description:'Neon Valley Park', image:'' },{ id:'o36', name:'Crystal Kingdom', description:'Crystal Kingdom', image:'' }] },
+  ]
+};
+
+/* ── Load / Save ─────────────────────────────────────────── */
+function loadConfig() {
+  try { const r = localStorage.getItem(STORE_KEY); if (r) return JSON.parse(r); } catch {}
+  return JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+}
+
+function saveConfigData(cfg) {
+  localStorage.setItem(STORE_KEY, JSON.stringify(cfg));
+}
+
+let cfg = loadConfig();
+// Track expanded categories
+let expandedCats = new Set();
+
+/* ── Tab switching ───────────────────────────────────────── */
+document.querySelectorAll('.s-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.s-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.s-panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    const panel = document.getElementById('stab-' + tab.dataset.tab);
+    if (panel) panel.classList.add('active');
   });
+});
 
-  /* Export votes as JSON */
-  function exportVotes() {
-    const raw = localStorage.getItem('psa2026_votes') || '{}';
-    const blob = new Blob([JSON.stringify(JSON.parse(raw), null, 2)], { type: 'application/json' });
-    const url  = URL.createObjectURL(blob);
-    const a    = document.createElement('a');
-    a.href     = url;
-    a.download = 'psa2026_votes_export.json';
-    a.click();
-    URL.revokeObjectURL(url);
-  }
+/* ── Render categories table ─────────────────────────────── */
+function renderTable() {
+  const tbody = document.getElementById('categories-tbody');
+  tbody.innerHTML = '';
 
-  /* Show vote summary */
-  function showVoteSummary() {
-    const STORAGE_KEYS = { config: 'psa2026_config', votes: 'psa2026_votes' };
+  cfg.categories.forEach((cat, i) => {
+    const isExpanded = expandedCats.has(cat.id);
 
-    function getConfig() {
-      try { const r = localStorage.getItem(STORAGE_KEYS.config); return r ? JSON.parse(r) : {}; } catch { return {}; }
-    }
-    function getVotes() {
-      try { const r = localStorage.getItem(STORAGE_KEYS.votes); return r ? JSON.parse(r) : {}; } catch { return {}; }
-    }
+    // Icon selector options
+    const iconOptions = Object.keys(ICON_MAP).map(k =>
+      `<option value="${k}" ${cat.icon === k ? 'selected' : ''}>${k}</option>`
+    ).join('');
 
-    const cfg    = getConfig();
-    const votes  = getVotes();
-    const voters = Object.keys(votes).length;
-    let output   = `PARK SCOUT AWARDS 2026 — Vote Summary\n`;
-    output += `Generated: ${new Date().toLocaleString()}\n`;
-    output += `Total Voters: ${voters}\n`;
-    output += '─'.repeat(50) + '\n\n';
-
-    (cfg.categories || []).forEach(cat => {
-      const tally = {};
-      for (const vid in votes) {
-        const pick = votes[vid][cat.id];
-        if (pick) tally[pick] = (tally[pick] || 0) + 1;
-      }
-      const total = Object.values(tally).reduce((a, b) => a + b, 0);
-      output += `${cat.icon || '🎡'}  ${cat.name} (${total} votes)\n`;
-
-      const sorted = (cat.nominees || [])
-        .map(n => ({ name: n.name, park: n.park, votes: tally[n.id] || 0 }))
-        .sort((a, b) => b.votes - a.votes);
-
-      sorted.forEach((n, i) => {
-        const pct = total > 0 ? Math.round(n.votes / total * 100) : 0;
-        output += `  ${i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '  '} ${n.name} (${n.park}) — ${n.votes} votes (${pct}%)\n`;
-      });
-      output += '\n';
+    // Main row
+    const tr = document.createElement('tr');
+    tr.className = 'cat-row' + (isExpanded ? ' expanded' : '');
+    tr.id = 'cat-row-' + cat.id;
+    tr.innerHTML = `
+      <td style="color:var(--text-3);font-size:0.75rem;">${i + 1}</td>
+      <td>
+        <div class="icon-chip" id="icon-chip-${cat.id}">
+          ${ICON_MAP[cat.icon] || ICON_MAP.trophy}
+        </div>
+      </td>
+      <td>
+        <div class="cat-name-cell">
+          <input class="cat-name-editable" id="cat-name-${cat.id}"
+                 value="${esc(cat.name)}"
+                 onclick="event.stopPropagation()"
+                 onchange="updateCatName('${cat.id}', this.value)"
+                 title="Click to rename">
+        </div>
+      </td>
+      <td style="text-align:center;">
+        <span style="font-size:0.78rem;color:var(--text-2);">${cat.options.length}</span>
+      </td>
+      <td style="text-align:right;">
+        <div style="display:flex;gap:5px;justify-content:flex-end;align-items:center;">
+          <select class="s-select" style="width:110px;padding:0.3rem 0.5rem;font-size:0.72rem;"
+                  title="Change icon"
+                  onclick="event.stopPropagation()"
+                  onchange="updateCatIcon('${cat.id}', this.value)">
+            ${iconOptions}
+          </select>
+          <button class="btn btn-danger btn-sm" title="Delete category"
+                  onclick="event.stopPropagation();deleteCategory('${cat.id}')">
+            <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+          </button>
+          <div class="cat-row-toggle">
+            <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </div>
+      </td>
+    `;
+    tr.querySelector('.cat-row-toggle').addEventListener('click', () => toggleCat(cat.id));
+    tr.addEventListener('click', (e) => {
+      if (e.target.closest('input') || e.target.closest('select') || e.target.closest('button')) return;
+      toggleCat(cat.id);
     });
+    tbody.appendChild(tr);
 
-    const card    = document.getElementById('vote-summary-card');
-    const content = document.getElementById('vote-summary-content');
-    if (content) content.textContent = output;
-    if (card)    card.style.display  = 'block';
-    card?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // Options row (always in DOM, shown/hidden)
+    const optsTr = document.createElement('tr');
+    optsTr.className = 'cat-options-row' + (isExpanded ? ' open' : '');
+    optsTr.id = 'cat-opts-' + cat.id;
+    optsTr.innerHTML = `<td colspan="5">
+      <div class="cat-options-inner" ${isExpanded ? '' : 'style="display:none;"'}>
+        ${buildOptionsInner(cat)}
+      </div>
+    </td>`;
+    tbody.appendChild(optsTr);
+  });
+}
+
+function buildOptionsInner(cat) {
+  const rows = cat.options.map(opt => `
+    <tr>
+      <td>
+        <input class="s-input" style="font-size:0.8rem;"
+               value="${esc(opt.name)}"
+               placeholder="Option name"
+               onchange="updateOption('${cat.id}','${opt.id}','name',this.value)">
+      </td>
+      <td>
+        <input class="s-input" style="font-size:0.8rem;"
+               value="${esc(opt.description)}"
+               placeholder="e.g. Park name"
+               onchange="updateOption('${cat.id}','${opt.id}','description',this.value)">
+      </td>
+      <td>
+        <input class="s-input url-input" style="font-size:0.78rem;"
+               value="${esc(opt.image)}"
+               placeholder="https://… (optional)"
+               onchange="updateOption('${cat.id}','${opt.id}','image',this.value)">
+      </td>
+      <td style="width:50px;">
+        <button class="btn btn-danger btn-sm" onclick="deleteOption('${cat.id}','${opt.id}')">
+          <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </td>
+    </tr>`).join('');
+
+  return `
+    <div class="opts-table-wrap">
+      <table class="opts-table" id="opts-table-${cat.id}">
+        <thead>
+          <tr>
+            <th style="width:22%;">Name *</th>
+            <th style="width:22%;">Description / Park</th>
+            <th>Image URL <span style="font-weight:400;text-transform:none;letter-spacing:0;">(optional)</span></th>
+            <th style="width:50px;"></th>
+          </tr>
+        </thead>
+        <tbody id="opts-tbody-${cat.id}">
+          ${rows}
+        </tbody>
+      </table>
+    </div>
+    <div class="add-option-row">
+      <div>
+        <label class="s-label">Name *</label>
+        <input class="s-input inline" id="new-opt-name-${cat.id}" placeholder="e.g. Thunder Dragon">
+      </div>
+      <div>
+        <label class="s-label">Description</label>
+        <input class="s-input inline" id="new-opt-desc-${cat.id}" placeholder="Park name">
+      </div>
+      <div>
+        <label class="s-label">Image URL</label>
+        <input class="s-input url-input" id="new-opt-img-${cat.id}" placeholder="https://...">
+      </div>
+      <div style="padding-top:1.2rem;">
+        <button class="btn btn-outline-gold btn-sm" onclick="addOption('${cat.id}')">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add
+        </button>
+      </div>
+    </div>`;
+}
+
+/* ── Toggle expand/collapse ──────────────────────────────── */
+function toggleCat(catId) {
+  const row   = document.getElementById('cat-row-' + catId);
+  const optsR = document.getElementById('cat-opts-' + catId);
+  const inner = optsR?.querySelector('.cat-options-inner');
+
+  if (expandedCats.has(catId)) {
+    expandedCats.delete(catId);
+    row?.classList.remove('expanded');
+    optsR?.classList.remove('open');
+    if (inner) inner.style.display = 'none';
+  } else {
+    expandedCats.add(catId);
+    row?.classList.add('expanded');
+    optsR?.classList.add('open');
+    if (inner) inner.style.display = 'block';
   }
+}
+
+/* ── Mutators ────────────────────────────────────────────── */
+function updateCatName(catId, value) {
+  const cat = cfg.categories.find(c => c.id === catId);
+  if (cat) { cat.name = value; saveConfigData(cfg); }
+}
+
+function updateCatIcon(catId, iconKey) {
+  const cat = cfg.categories.find(c => c.id === catId);
+  if (cat) {
+    cat.icon = iconKey;
+    saveConfigData(cfg);
+    const chip = document.getElementById('icon-chip-' + catId);
+    if (chip) chip.innerHTML = ICON_MAP[iconKey] || ICON_MAP.trophy;
+  }
+}
+
+function updateOption(catId, optId, field, value) {
+  const cat = cfg.categories.find(c => c.id === catId);
+  const opt = cat?.options.find(o => o.id === optId);
+  if (opt) { opt[field] = value; saveConfigData(cfg); }
+  // Update option count cell
+  const row = document.getElementById('cat-row-' + catId);
+  if (row) {
+    const countCell = row.querySelectorAll('td')[3];
+    if (countCell) countCell.querySelector('span').textContent = cat.options.length;
+  }
+}
+
+function addOption(catId) {
+  const nameEl = document.getElementById('new-opt-name-' + catId);
+  const descEl = document.getElementById('new-opt-desc-' + catId);
+  const imgEl  = document.getElementById('new-opt-img-'  + catId);
+  const name   = nameEl?.value.trim();
+
+  if (!name) { nameEl?.focus(); nameEl?.style.setProperty('border-color','#e74c3c'); return; }
+  if (nameEl) nameEl.style.borderColor = '';
+
+  const cat = cfg.categories.find(c => c.id === catId);
+  if (!cat) return;
+
+  const newOpt = {
+    id:          'o_' + Date.now(),
+    name:        name,
+    description: descEl?.value.trim() || '',
+    image:       imgEl?.value.trim()  || '',
+  };
+  cat.options.push(newOpt);
+  saveConfigData(cfg);
+
+  // Clear fields
+  if (nameEl) nameEl.value = '';
+  if (descEl) descEl.value = '';
+  if (imgEl)  imgEl.value  = '';
+
+  // Re-render just the options tbody
+  const tbody = document.getElementById('opts-tbody-' + catId);
+  if (tbody) {
+    const newRow = document.createElement('tr');
+    newRow.innerHTML = `
+      <td><input class="s-input" style="font-size:0.8rem;" value="${esc(newOpt.name)}" onchange="updateOption('${catId}','${newOpt.id}','name',this.value)"></td>
+      <td><input class="s-input" style="font-size:0.8rem;" value="${esc(newOpt.description)}" placeholder="e.g. Park name" onchange="updateOption('${catId}','${newOpt.id}','description',this.value)"></td>
+      <td><input class="s-input url-input" style="font-size:0.78rem;" value="${esc(newOpt.image)}" placeholder="https://..." onchange="updateOption('${catId}','${newOpt.id}','image',this.value)"></td>
+      <td><button class="btn btn-danger btn-sm" onclick="deleteOption('${catId}','${newOpt.id}')"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></td>
+    `;
+    tbody.appendChild(newRow);
+  }
+
+  // Update count badge
+  const row = document.getElementById('cat-row-' + catId);
+  if (row) {
+    const countCell = row.querySelectorAll('td')[3];
+    if (countCell) countCell.querySelector('span').textContent = cat.options.length;
+  }
+
+  showToast('Option added.');
+}
+
+function deleteOption(catId, optId) {
+  const cat = cfg.categories.find(c => c.id === catId);
+  if (!cat) return;
+  if (!confirm('Delete this option?')) return;
+  cat.options = cat.options.filter(o => o.id !== optId);
+  saveConfigData(cfg);
+
+  // Re-render inner
+  const inner = document.querySelector(`#cat-opts-${catId} .cat-options-inner`);
+  if (inner) inner.innerHTML = buildOptionsInner(cat);
+
+  // Update count
+  const row = document.getElementById('cat-row-' + catId);
+  if (row) {
+    const countCell = row.querySelectorAll('td')[3];
+    if (countCell) countCell.querySelector('span').textContent = cat.options.length;
+  }
+  showToast('Option removed.');
+}
+
+function addCategory() {
+  const id = 'cat_' + Date.now();
+  cfg.categories.push({
+    id, icon: 'trophy', name: 'New Category',
+    options: []
+  });
+  saveConfigData(cfg);
+  expandedCats.add(id);
+  renderTable();
+  // Scroll to bottom
+  setTimeout(() => {
+    const el = document.getElementById('cat-row-' + id);
+    el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    document.getElementById('cat-name-' + id)?.focus();
+  }, 100);
+}
+
+function deleteCategory(catId) {
+  if (!confirm('Delete this entire category and all its options?')) return;
+  cfg.categories = cfg.categories.filter(c => c.id !== catId);
+  expandedCats.delete(catId);
+  saveConfigData(cfg);
+  renderTable();
+  showToast('Category deleted.');
+}
+
+/* ── Save all ────────────────────────────────────────────── */
+function saveAll() {
+  saveConfigData(cfg);
+  showToast('All changes saved.');
+}
+
+/* ── General settings ────────────────────────────────────── */
+function loadGeneralInputs() {
+  const whEl = document.getElementById('setting-webhook');
+  const lkEl = document.getElementById('setting-locked');
+  if (whEl) whEl.value = cfg.webhookUrl || '';
+  if (lkEl) lkEl.checked = !!cfg.votingLocked;
+}
+
+function saveGeneral() {
+  const whEl = document.getElementById('setting-webhook');
+  const lkEl = document.getElementById('setting-locked');
+  if (whEl) cfg.webhookUrl    = whEl.value.trim();
+  if (lkEl) cfg.votingLocked  = lkEl.checked;
+  saveConfigData(cfg);
+  showToast('Settings saved.');
+}
+
+async function testWebhook() {
+  const url = document.getElementById('setting-webhook')?.value.trim() || cfg.webhookUrl;
+  const fb  = document.getElementById('webhook-feedback');
+  if (!url) { if (fb) { fb.textContent = 'No webhook URL set.'; fb.style.display='block'; } return; }
+
+  const payload = {
+    username: 'Park Scout Awards 2026',
+    embeds: [{
+      title: 'Test Message',
+      description: 'This is a test from the Park Scout Awards 2026 settings panel.',
+      color: 0xC8A84B,
+    }]
+  };
+
+  try {
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    if (resp.ok || resp.status === 204) {
+      if (fb) { fb.textContent = 'Test sent successfully!'; fb.style.color = '#2ecc71'; fb.style.display = 'block'; }
+    } else {
+      throw new Error('HTTP ' + resp.status);
+    }
+  } catch (e) {
+    if (fb) { fb.textContent = 'Error: ' + e.message; fb.style.color = '#e74c3c'; fb.style.display = 'block'; }
+  }
+}
+
+/* ── Export / Import ─────────────────────────────────────── */
+function exportConfig() {
+  const blob = new Blob([JSON.stringify(cfg, null, 2)], { type: 'application/json' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = 'psa2026_config.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importConfig(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const parsed = JSON.parse(e.target.result);
+      if (!parsed.categories) { alert('Invalid config file.'); return; }
+      cfg = parsed;
+      saveConfigData(cfg);
+      renderTable();
+      loadGeneralInputs();
+      showToast('Configuration imported.');
+    } catch { alert('Failed to parse JSON.'); }
+  };
+  reader.readAsText(file);
+}
+
+/* ── Reset ───────────────────────────────────────────────── */
+function resetToDefaults() {
+  if (!confirm('Reset everything to factory defaults? This will also clear the voted flag.')) return;
+  localStorage.removeItem(STORE_KEY);
+  localStorage.removeItem(VOTED_KEY);
+  cfg = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+  expandedCats = new Set();
+  renderTable();
+  loadGeneralInputs();
+  showToast('Reset to defaults.');
+}
+
+/* ── Toast ───────────────────────────────────────────────── */
+let toastTimer;
+function showToast(msg) {
+  const el = document.getElementById('save-toast');
+  const msgEl = document.getElementById('save-toast-msg');
+  if (msgEl) msgEl.textContent = msg;
+  el?.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el?.classList.remove('show'), 2500);
+}
+
+/* ── Utility ─────────────────────────────────────────────── */
+function esc(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+/* ── Init ────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  renderTable();
+  loadGeneralInputs();
+});
 </script>
+
 </body>
 </html>
