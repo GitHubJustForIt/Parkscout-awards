@@ -1,719 +1,429 @@
-/* ============================================================
+/* ================================================================
    PARK SCOUT AWARDS 2026 — ROBLOX TPT2
-   app.js — Core Application Logic
-   ============================================================ */
+   app.js — Core Voting Application
+   ================================================================ */
 
 'use strict';
 
-/* ══════════════════════════════════════════════════════════
-   DEFAULT DATA
-══════════════════════════════════════════════════════════ */
+/* ================================================================
+   ICONS (SVG path strings — no emojis, ever)
+   ================================================================ */
+const ICONS = {
+  coaster: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 18 L6 10 L10 14 L14 6 L18 12 L22 8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6" cy="10" r="1.5" fill="currentColor" stroke="none"/><circle cx="14" cy="6" r="1.5" fill="currentColor" stroke="none"/></svg>`,
+  darkride: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  flatride: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9" stroke-width="1.8"/><path d="M12 3 L12 6M12 18 L12 21M3 12 L6 12M18 12 L21 12" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="12" r="3" stroke-width="1.8"/></svg>`,
+  water: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 12 C5 9 7 15 10 12 C13 9 15 15 18 12 C21 9 22 12 22 12" stroke-width="1.8" stroke-linecap="round"/><path d="M2 17 C5 14 7 20 10 17 C13 14 15 20 18 17 C21 14 22 17 22 17" stroke-width="1.8" stroke-linecap="round"/></svg>`,
+  food: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 2 L3 12 C3 14.2 4.8 16 7 16 L7 22M7 2 L7 8M11 2 C11 2 15 4 15 9 C15 11 13.5 12.8 11.5 13.5L11.5 22" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  show: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  theming: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 21 L3 10 L8 4 L13 10 L13 21Z M13 21 L13 14 L17 10 L21 14 L21 21" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  new: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><polygon points="13,2 3,14 12,14 11,22 21,10 12,10" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  family: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="5" r="2.5" stroke-width="1.8"/><circle cx="16" cy="6" r="2" stroke-width="1.8"/><path d="M4 20 L4 14 C4 11.8 6.2 10 9 10 C11.8 10 14 11.8 14 14 L14 20" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 20 L16 15 C16 13.3 17.3 12 19 12 L22 12" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  scenery: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 20 L7 11 L12 16 L15 12 L22 20Z" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="17" cy="6" r="3" stroke-width="1.8"/></svg>`,
+  trophy: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 21 L16 21M12 17 L12 21M7 4 L17 4 L17 11 C17 14.31 14.76 17 12 17 C9.24 17 7 14.31 7 11 Z" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 6 C7 6 4 6 4 9 C4 11 5.5 12.5 7 13" stroke-width="1.8" stroke-linecap="round"/><path d="M17 6 C17 6 20 6 20 9 C20 11 18.5 12.5 17 13" stroke-width="1.8" stroke-linecap="round"/></svg>`,
+  heart: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  pin: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="10" r="3" stroke-width="1.8"/></svg>`,
+  image: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="18" height="18" rx="2" ry="2" stroke-width="1.8"/><circle cx="8.5" cy="8.5" r="1.5" stroke-width="1.8"/><polyline points="21,15 16,10 5,21" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+};
+
+/* category icon key → icon svg */
+const ICON_KEYS = Object.keys(ICONS);
+
+function getIcon(key) {
+  return ICONS[key] || ICONS.trophy;
+}
+
+/* ================================================================
+   STORAGE KEYS
+   ================================================================ */
+const STORE = {
+  config: 'psa2026_config',
+  voted:  'psa2026_voted',
+};
+
+/* ================================================================
+   DEFAULT CONFIG (12 categories, 3+ options each)
+   ================================================================ */
 const DEFAULT_CONFIG = {
-  password: 'admin2026',
-  siteName: 'Park Scout Awards 2026',
-  subtitle: 'Roblox — Theme Park Tycoon 2',
-  votingOpen: true,
-  parks: [
-    { id: 'park_1', name: 'Dreamland Resort', image: 'https://images.unsplash.com/photo-1605727216801-e27ce1d0cc28?w=400' },
-    { id: 'park_2', name: 'Neon Valley Park',  image: 'https://images.unsplash.com/photo-1559825481-12a05cc00344?w=400' },
-    { id: 'park_3', name: 'Crystal Kingdom',   image: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=400' }
-  ],
+  webhookUrl: 'https://discord.com/api/webhooks/1486411564151079145/RUcUc0mPD-z3tq7tUDgUN0rOpfDlj8u8Z9b11rcixeBcO8GToTRNl9aialndjLiOARpI',
   categories: [
     {
-      id: 'cat_coaster', icon: '🎢',
-      name: 'Best Roller Coaster',
-      nominees: [
-        { id: 'n1', name: 'Thunder Dragon', park: 'Dreamland Resort', image: '' },
-        { id: 'n2', name: 'Neon Rush',      park: 'Neon Valley Park',  image: '' },
-        { id: 'n3', name: 'Crystal Fury',   park: 'Crystal Kingdom',   image: '' }
+      id: 'cat_coaster', icon: 'coaster', name: 'Best Roller Coaster',
+      options: [
+        { id: 'o1', name: 'Thunder Dragon',  description: 'Dreamland Resort', image: '' },
+        { id: 'o2', name: 'Neon Rush',       description: 'Neon Valley Park',  image: '' },
+        { id: 'o3', name: 'Crystal Fury',    description: 'Crystal Kingdom',   image: '' },
       ]
     },
     {
-      id: 'cat_dark', icon: '🌑',
-      name: 'Best Dark Ride',
-      nominees: [
-        { id: 'n4', name: 'Phantom Chase',    park: 'Dreamland Resort', image: '' },
-        { id: 'n5', name: 'The Void Escape',  park: 'Neon Valley Park',  image: '' },
-        { id: 'n6', name: 'Crystal Depths',   park: 'Crystal Kingdom',   image: '' }
+      id: 'cat_dark', icon: 'darkride', name: 'Best Dark Ride',
+      options: [
+        { id: 'o4', name: 'Phantom Chase',   description: 'Dreamland Resort', image: '' },
+        { id: 'o5', name: 'The Void',        description: 'Neon Valley Park',  image: '' },
+        { id: 'o6', name: 'Crystal Depths',  description: 'Crystal Kingdom',   image: '' },
       ]
     },
     {
-      id: 'cat_flat', icon: '🌀',
-      name: 'Best Flat Ride',
-      nominees: [
-        { id: 'n7', name: 'Gravity Spin',   park: 'Dreamland Resort', image: '' },
-        { id: 'n8', name: 'Neon Whirl',     park: 'Neon Valley Park',  image: '' }
+      id: 'cat_flat', icon: 'flatride', name: 'Best Flat Ride',
+      options: [
+        { id: 'o7',  name: 'Gravity Spin',  description: 'Dreamland Resort', image: '' },
+        { id: 'o8',  name: 'Neon Whirl',    description: 'Neon Valley Park',  image: '' },
+        { id: 'o9',  name: 'Ice Cyclone',   description: 'Crystal Kingdom',   image: '' },
       ]
     },
     {
-      id: 'cat_water', icon: '💧',
-      name: 'Best Water Ride',
-      nominees: [
-        { id: 'n9',  name: 'Tidal Wave',   park: 'Dreamland Resort', image: '' },
-        { id: 'n10', name: 'Crystal Falls', park: 'Crystal Kingdom',   image: '' }
+      id: 'cat_water', icon: 'water', name: 'Best Water Ride',
+      options: [
+        { id: 'o10', name: 'Tidal Wave',    description: 'Dreamland Resort', image: '' },
+        { id: 'o11', name: 'Crystal Falls', description: 'Crystal Kingdom',   image: '' },
+        { id: 'o12', name: 'Neon Splash',   description: 'Neon Valley Park',  image: '' },
       ]
     },
     {
-      id: 'cat_food', icon: '🍔',
-      name: 'Best Food & Beverage',
-      nominees: [
-        { id: 'n11', name: 'Dreamland Grill',    park: 'Dreamland Resort', image: '' },
-        { id: 'n12', name: 'Neon Bites',          park: 'Neon Valley Park',  image: '' },
-        { id: 'n13', name: 'Crystal Café',         park: 'Crystal Kingdom',   image: '' }
+      id: 'cat_food', icon: 'food', name: 'Best Food & Beverage',
+      options: [
+        { id: 'o13', name: 'Dreamland Grill',  description: 'Dreamland Resort', image: '' },
+        { id: 'o14', name: 'Neon Bites',       description: 'Neon Valley Park',  image: '' },
+        { id: 'o15', name: 'Crystal Café',     description: 'Crystal Kingdom',   image: '' },
       ]
     },
     {
-      id: 'cat_show', icon: '🎭',
-      name: 'Best Show & Entertainment',
-      nominees: [
-        { id: 'n14', name: 'Lights of Dreamland', park: 'Dreamland Resort', image: '' },
-        { id: 'n15', name: 'Neon Nights Parade',   park: 'Neon Valley Park',  image: '' }
+      id: 'cat_show', icon: 'show', name: 'Best Show & Entertainment',
+      options: [
+        { id: 'o16', name: 'Lights of Dreamland', description: 'Dreamland Resort', image: '' },
+        { id: 'o17', name: 'Neon Nights Parade',  description: 'Neon Valley Park',  image: '' },
+        { id: 'o18', name: 'Crystal Spectacular',  description: 'Crystal Kingdom',   image: '' },
       ]
     },
     {
-      id: 'cat_theming', icon: '🏰',
-      name: 'Best Theme Area / Land',
-      nominees: [
-        { id: 'n16', name: 'Dragon Realm',   park: 'Dreamland Resort', image: '' },
-        { id: 'n17', name: 'Cyber District',  park: 'Neon Valley Park',  image: '' },
-        { id: 'n18', name: 'Ice Pinnacle',    park: 'Crystal Kingdom',   image: '' }
+      id: 'cat_theming', icon: 'theming', name: 'Best Theme Area',
+      options: [
+        { id: 'o19', name: 'Dragon Realm',   description: 'Dreamland Resort', image: '' },
+        { id: 'o20', name: 'Cyber District', description: 'Neon Valley Park',  image: '' },
+        { id: 'o21', name: 'Ice Pinnacle',   description: 'Crystal Kingdom',   image: '' },
       ]
     },
     {
-      id: 'cat_new', icon: '✨',
-      name: 'Best New Attraction',
-      nominees: [
-        { id: 'n19', name: 'Hyper Loop X',     park: 'Dreamland Resort', image: '' },
-        { id: 'n20', name: 'Neon Skyrise',      park: 'Neon Valley Park',  image: '' }
+      id: 'cat_new', icon: 'new', name: 'Best New Attraction 2026',
+      options: [
+        { id: 'o22', name: 'Hyper Loop X',   description: 'Dreamland Resort', image: '' },
+        { id: 'o23', name: 'Neon Skyrise',   description: 'Neon Valley Park',  image: '' },
+        { id: 'o24', name: 'Frost Comet',    description: 'Crystal Kingdom',   image: '' },
       ]
     },
     {
-      id: 'cat_family', icon: '👨‍👩‍👧',
-      name: 'Best Family Attraction',
-      nominees: [
-        { id: 'n21', name: 'Balloon Safari',    park: 'Dreamland Resort', image: '' },
-        { id: 'n22', name: 'Pixel Playground',   park: 'Neon Valley Park',  image: '' },
-        { id: 'n23', name: 'Crystal Adventure',  park: 'Crystal Kingdom',   image: '' }
+      id: 'cat_family', icon: 'family', name: 'Best Family Attraction',
+      options: [
+        { id: 'o25', name: 'Balloon Safari',    description: 'Dreamland Resort', image: '' },
+        { id: 'o26', name: 'Pixel Playground',  description: 'Neon Valley Park',  image: '' },
+        { id: 'o27', name: 'Crystal Adventure', description: 'Crystal Kingdom',   image: '' },
       ]
     },
     {
-      id: 'cat_scenery', icon: '🎨',
-      name: 'Best Scenery & Theming',
-      nominees: [
-        { id: 'n24', name: 'Enchanted Forest',  park: 'Dreamland Resort', image: '' },
-        { id: 'n25', name: 'Holographic Bay',    park: 'Neon Valley Park',  image: '' }
+      id: 'cat_scenery', icon: 'scenery', name: 'Best Scenery & Theming',
+      options: [
+        { id: 'o28', name: 'Enchanted Forest', description: 'Dreamland Resort', image: '' },
+        { id: 'o29', name: 'Holographic Bay',  description: 'Neon Valley Park',  image: '' },
+        { id: 'o30', name: 'Crystal Peaks',    description: 'Crystal Kingdom',   image: '' },
       ]
     },
     {
-      id: 'cat_overall', icon: '🏆',
-      name: 'Best Park Overall',
-      nominees: [
-        { id: 'n26', name: 'Dreamland Resort', park: 'Dreamland Resort', image: '' },
-        { id: 'n27', name: 'Neon Valley Park',  park: 'Neon Valley Park',  image: '' },
-        { id: 'n28', name: 'Crystal Kingdom',   park: 'Crystal Kingdom',   image: '' }
+      id: 'cat_overall', icon: 'trophy', name: 'Best Park Overall',
+      options: [
+        { id: 'o31', name: 'Dreamland Resort', description: 'by Player123',   image: '' },
+        { id: 'o32', name: 'Neon Valley Park', description: 'by PlayerXYZ',   image: '' },
+        { id: 'o33', name: 'Crystal Kingdom',  description: 'by CrystalBuild', image: '' },
       ]
     },
     {
-      id: 'cat_experience', icon: '⭐',
-      name: 'Best Guest Experience',
-      nominees: [
-        { id: 'n29', name: 'Dreamland Resort', park: 'Dreamland Resort', image: '' },
-        { id: 'n30', name: 'Crystal Kingdom',   park: 'Crystal Kingdom',   image: '' }
+      id: 'cat_experience', icon: 'heart', name: 'Best Guest Experience',
+      options: [
+        { id: 'o34', name: 'Dreamland Resort', description: 'Dreamland Resort', image: '' },
+        { id: 'o35', name: 'Neon Valley Park', description: 'Neon Valley Park',  image: '' },
+        { id: 'o36', name: 'Crystal Kingdom',  description: 'Crystal Kingdom',   image: '' },
       ]
-    }
+    },
   ]
 };
 
-/* ══════════════════════════════════════════════════════════
-   STORAGE HELPERS
-══════════════════════════════════════════════════════════ */
-const STORAGE_KEYS = {
-  config: 'psa2026_config',
-  votes:  'psa2026_votes',
-  voter:  'psa2026_voter_id'
-};
-
-function getConfig() {
+/* ================================================================
+   CONFIG HELPERS
+   ================================================================ */
+function loadConfig() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEYS.config);
-    return raw ? JSON.parse(raw) : JSON.parse(JSON.stringify(DEFAULT_CONFIG));
-  } catch { return JSON.parse(JSON.stringify(DEFAULT_CONFIG)); }
+    const raw = localStorage.getItem(STORE.config);
+    if (raw) return JSON.parse(raw);
+  } catch {}
+  return JSON.parse(JSON.stringify(DEFAULT_CONFIG));
 }
 
 function saveConfig(cfg) {
-  localStorage.setItem(STORAGE_KEYS.config, JSON.stringify(cfg));
+  localStorage.setItem(STORE.config, JSON.stringify(cfg));
 }
 
-function getVotes() {
+function hasVoted() {
+  return localStorage.getItem(STORE.voted) === '1';
+}
+
+function markVoted() {
+  localStorage.setItem(STORE.voted, '1');
+}
+
+/* ================================================================
+   VOTING STATE
+   ================================================================ */
+let state = {
+  config: null,
+  step: 0,         // current category index (0 = intro, then 0..n-1, then review)
+  votes: {},       // { categoryId: optionId }
+  phase: 'intro',  // 'intro' | 'voting' | 'review' | 'thanks' | 'already'
+};
+
+/* ================================================================
+   SCREEN MANAGEMENT
+   ================================================================ */
+const screens = {
+  intro:         document.getElementById('screen-intro'),
+  already:       document.getElementById('screen-already-voted'),
+  voting:        document.getElementById('screen-voting'),
+  review:        document.getElementById('screen-review'),
+  thanks:        document.getElementById('screen-thanks'),
+};
+
+function showScreen(name) {
+  Object.entries(screens).forEach(([k, el]) => {
+    if (!el) return;
+    el.style.display = k === name ? '' : 'none';
+  });
+  state.phase = name;
+}
+
+/* ================================================================
+   INTRO
+   ================================================================ */
+function initIntro() {
+  if (hasVoted()) {
+    showScreen('already');
+    return;
+  }
+  showScreen('intro');
+
+  document.getElementById('btn-start-voting')?.addEventListener('click', () => {
+    state.config = loadConfig();
+    state.step   = 0;
+    state.votes  = {};
+    showScreen('voting');
+    renderStep();
+  });
+}
+
+/* ================================================================
+   VOTING WIZARD
+   ================================================================ */
+function renderStep() {
+  const cats   = state.config.categories;
+  const total  = cats.length;
+  const idx    = state.step;
+  const cat    = cats[idx];
+
+  // Progress
+  const pct = Math.round((idx / total) * 100);
+  document.getElementById('progress-fill').style.width  = pct + '%';
+  document.getElementById('progress-current').textContent = idx + 1;
+  document.getElementById('progress-total').textContent   = total;
+
+  // Category header
+  document.getElementById('cat-icon').innerHTML = getIcon(cat.icon);
+  document.getElementById('cat-name').textContent = cat.name;
+  document.getElementById('cat-step-num').textContent = `Category ${idx + 1} of ${total}`;
+
+  // Options
+  renderOptions(cat);
+
+  // Nav buttons
+  const backBtn = document.getElementById('btn-back');
+  const nextBtn = document.getElementById('btn-next');
+
+  backBtn.disabled = idx === 0;
+
+  const picked = state.votes[cat.id];
+  nextBtn.disabled = !picked;
+
+  // Last step label
+  const isLast = idx === total - 1;
+  document.getElementById('next-label').textContent = isLast ? 'Review Ballot' : 'Continue';
+  const nextIcon = document.getElementById('next-icon');
+  if (isLast) {
+    nextIcon.innerHTML = `<path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>`;
+  } else {
+    nextIcon.innerHTML = `<line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>`;
+  }
+}
+
+function renderOptions(cat) {
+  const grid   = document.getElementById('options-grid');
+  const picked = state.votes[cat.id];
+
+  grid.innerHTML = cat.options.map(opt => {
+    const isSelected = picked === opt.id;
+
+    const imgHtml = opt.image
+      ? `<div class="option-img-wrap">
+           <img class="option-img" src="${esc(opt.image)}" alt="${esc(opt.name)}"
+                onerror="this.parentElement.innerHTML='<div class=\\'option-no-img\\'>${ICONS.image.replace(/'/g, "\\'")}</div>'">
+           <div class="option-selected-bar"></div>
+           <div class="option-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+         </div>`
+      : `<div class="option-img-wrap">
+           <div class="option-no-img">${ICONS.image}</div>
+           <div class="option-selected-bar"></div>
+           <div class="option-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+         </div>`;
+
+    return `<div class="option-card${isSelected ? ' selected' : ''}"
+                 data-option-id="${esc(opt.id)}"
+                 onclick="selectOption('${esc(opt.id)}')">
+               ${imgHtml}
+               <div class="option-body">
+                 <span class="option-tag">${esc(opt.description)}</span>
+                 <div class="option-name">${esc(opt.name)}</div>
+               </div>
+             </div>`;
+  }).join('');
+}
+
+function selectOption(optionId) {
+  const cat = state.config.categories[state.step];
+  state.votes[cat.id] = optionId;
+
+  // Update cards
+  document.querySelectorAll('.option-card').forEach(card => {
+    card.classList.toggle('selected', card.dataset.optionId === optionId);
+  });
+
+  // Enable next
+  document.getElementById('btn-next').disabled = false;
+}
+
+function goBack() {
+  if (state.step > 0) {
+    state.step--;
+    renderStep();
+  }
+}
+
+function goNext() {
+  const cats = state.config.categories;
+  if (state.step < cats.length - 1) {
+    state.step++;
+    renderStep();
+  } else {
+    showReview();
+  }
+}
+
+function skipCurrent() {
+  const cat = state.config.categories[state.step];
+  delete state.votes[cat.id];
+  goNext();
+}
+
+/* ================================================================
+   REVIEW SCREEN
+   ================================================================ */
+function showReview() {
+  showScreen('review');
+  const cats = state.config.categories;
+  const list = document.getElementById('review-list');
+
+  list.innerHTML = cats.map((cat, i) => {
+    const vote   = state.votes[cat.id];
+    const option = cat.options.find(o => o.id === vote);
+
+    return `<div class="review-row">
+      <span class="review-row-num">${String(i + 1).padStart(2, '0')}</span>
+      <span class="review-row-category">${esc(cat.name)}</span>
+      ${option
+        ? `<span class="review-row-choice">${esc(option.name)}</span>`
+        : `<span class="review-row-choice review-row-skipped">Skipped</span>`
+      }
+      <button class="review-row-edit" title="Edit this vote" onclick="editVote(${i})">
+        <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      </button>
+    </div>`;
+  }).join('');
+}
+
+function editVote(stepIndex) {
+  state.step = stepIndex;
+  showScreen('voting');
+  renderStep();
+}
+
+/* ================================================================
+   SUBMIT
+   ================================================================ */
+async function submitVotes() {
+  const btn = document.getElementById('btn-submit');
+  btn.disabled = true;
+  btn.innerHTML = `<span class="spinner"></span> Submitting…`;
+
+  const cfg  = state.config;
+  const cats = cfg.categories;
+
+  // Build Discord embed fields
+  const fields = cats.map(cat => {
+    const vote   = state.votes[cat.id];
+    const option = cat.options.find(o => o.id === vote);
+    return {
+      name: cat.name,
+      value: option ? option.name : '*— No vote —*',
+      inline: true,
+    };
+  });
+
+  const payload = {
+    username: 'Park Scout Awards 2026',
+    avatar_url: 'https://i.imgur.com/4M34hi2.png',
+    embeds: [{
+      title: 'New Ballot Received',
+      description: 'A community member has submitted their Park Scout Awards 2026 ballot.',
+      color: 0xC8A84B,
+      fields: fields,
+      footer: {
+        text: `Park Scout Awards 2026 · Roblox TPT2 · ${new Date().toUTCString()}`
+      },
+      thumbnail: {
+        url: 'https://i.imgur.com/4M34hi2.png'
+      }
+    }]
+  };
+
   try {
-    const raw = localStorage.getItem(STORAGE_KEYS.votes);
-    return raw ? JSON.parse(raw) : {};
-  } catch { return {}; }
-}
-
-function saveVotes(v) {
-  localStorage.setItem(STORAGE_KEYS.votes, JSON.stringify(v));
-}
-
-function getVoterId() {
-  let id = localStorage.getItem(STORAGE_KEYS.voter);
-  if (!id) {
-    id = 'v_' + Math.random().toString(36).substr(2, 12) + '_' + Date.now();
-    localStorage.setItem(STORAGE_KEYS.voter, id);
-  }
-  return id;
-}
-
-/* ══════════════════════════════════════════════════════════
-   VOTE HELPERS
-══════════════════════════════════════════════════════════ */
-function getUserVotes() {
-  const vid = getVoterId();
-  const allVotes = getVotes();
-  return allVotes[vid] || {};
-}
-
-function castVote(categoryId, nomineeId) {
-  const vid = getVoterId();
-  const allVotes = getVotes();
-  if (!allVotes[vid]) allVotes[vid] = {};
-  allVotes[vid][categoryId] = nomineeId;
-  saveVotes(allVotes);
-}
-
-function getTallyForCategory(categoryId) {
-  const allVotes = getVotes();
-  const tally = {};
-  for (const vid in allVotes) {
-    const pick = allVotes[vid][categoryId];
-    if (pick) tally[pick] = (tally[pick] || 0) + 1;
-  }
-  return tally;
-}
-
-function getTotalVoters() {
-  return Object.keys(getVotes()).length;
-}
-
-function getCategoriesVoted() {
-  const userVotes = getUserVotes();
-  return Object.keys(userVotes).length;
-}
-
-/* ══════════════════════════════════════════════════════════
-   TOAST
-══════════════════════════════════════════════════════════ */
-let toastTimer = null;
-
-function showToast(icon, title, body) {
-  const t = document.getElementById('toast');
-  if (!t) return;
-  t.querySelector('.toast-icon').textContent = icon;
-  t.querySelector('.toast-text strong').textContent = title;
-  t.querySelector('.toast-text span').textContent = body;
-  t.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
-}
-
-/* ══════════════════════════════════════════════════════════
-   MAIN INDEX PAGE — VOTING UI
-══════════════════════════════════════════════════════════ */
-function initVotingPage() {
-  const cfg = getConfig();
-  updateHeroStats();
-
-  // Render category tabs
-  const tabsContainer  = document.getElementById('categoryTabs');
-  const panelsContainer = document.getElementById('categoryPanels');
-  if (!tabsContainer || !panelsContainer) return;
-
-  tabsContainer.innerHTML  = '';
-  panelsContainer.innerHTML = '';
-
-  cfg.categories.forEach((cat, i) => {
-    // Tab button
-    const tab = document.createElement('button');
-    tab.className = 'cat-tab' + (i === 0 ? ' active' : '');
-    tab.dataset.cat = cat.id;
-    tab.innerHTML = `<span class="cat-tab-icon">${cat.icon || '🎡'}</span>${cat.name}`;
-    tab.addEventListener('click', () => switchCategory(cat.id));
-    tabsContainer.appendChild(tab);
-
-    // Panel
-    const panel = document.createElement('div');
-    panel.className = 'nominees-panel' + (i === 0 ? ' active' : '');
-    panel.id = 'panel_' + cat.id;
-    panel.innerHTML = buildNomineesGrid(cat);
-    panelsContainer.appendChild(panel);
-  });
-
-  // Wire vote buttons
-  document.addEventListener('click', e => {
-    const btn = e.target.closest('.vote-btn[data-cat][data-nom]');
-    if (!btn) return;
-    handleVote(btn.dataset.cat, btn.dataset.nom, btn.dataset.nomName, btn.dataset.catName);
-  });
-}
-
-function buildNomineesGrid(cat) {
-  const userVotes = getUserVotes();
-  const myVote    = userVotes[cat.id];
-
-  if (!cat.nominees || cat.nominees.length === 0) {
-    return `<div class="nominees-grid">
-      <div class="empty-state">
-        <div class="empty-state-icon">🏗️</div>
-        <p>No nominees added yet for this category.</p>
-      </div>
-    </div>`;
-  }
-
-  const cards = cat.nominees.map(n => {
-    const voted = myVote === n.id;
-    const imgHtml = n.image
-      ? `<img class="card-img" src="${escapeHtml(n.image)}" alt="${escapeHtml(n.name)}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
-      : '';
-    const placeholderHtml = `<div class="card-img-placeholder" style="${n.image ? 'display:none' : ''}">${cat.icon || '🎡'}</div>`;
-
-    return `<div class="nominee-card${voted ? ' voted' : ''}" data-cat="${cat.id}" data-nom="${n.id}">
-      <div class="card-img-wrap">
-        ${imgHtml}${placeholderHtml}
-        <div class="card-voted-badge">✓ My Vote</div>
-      </div>
-      <div class="card-body">
-        <div class="card-park-tag">${escapeHtml(n.park)}</div>
-        <div class="card-name">${escapeHtml(n.name)}</div>
-        <button class="vote-btn"
-          data-cat="${cat.id}"
-          data-nom="${n.id}"
-          data-nom-name="${escapeHtml(n.name)}"
-          data-cat-name="${escapeHtml(cat.name)}"
-          ${voted ? '' : ''}>
-          ${voted ? '✓ Voted' : 'Cast Vote'}
-        </button>
-      </div>
-    </div>`;
-  }).join('');
-
-  return `<div class="nominees-grid">${cards}</div>`;
-}
-
-function switchCategory(catId) {
-  document.querySelectorAll('.cat-tab').forEach(t => t.classList.toggle('active', t.dataset.cat === catId));
-  document.querySelectorAll('.nominees-panel').forEach(p => p.classList.toggle('active', p.id === 'panel_' + catId));
-}
-
-function handleVote(categoryId, nomineeId, nomName, catName) {
-  const cfg = getConfig();
-  if (!cfg.votingOpen) { showToast('🔒', 'Voting Closed', 'The voting period has ended.'); return; }
-
-  castVote(categoryId, nomineeId);
-
-  // Update UI for this category panel
-  const cat = cfg.categories.find(c => c.id === categoryId);
-  if (cat) {
-    const panel = document.getElementById('panel_' + categoryId);
-    if (panel) panel.innerHTML = buildNomineesGrid(cat);
-  }
-
-  showToast('🏆', 'Vote Cast!', `You voted for "${nomName}" in ${catName}`);
-  updateHeroStats();
-}
-
-function updateHeroStats() {
-  const cfg = getConfig();
-  const totalCats  = cfg.categories.length;
-  const totalNoms  = cfg.categories.reduce((s, c) => s + (c.nominees?.length || 0), 0);
-  const totalVoters = getTotalVoters();
-  const voted       = getCategoriesVoted();
-
-  const el = (id, val) => { const e = document.getElementById(id); if (e) e.textContent = val; };
-  el('stat-categories', totalCats);
-  el('stat-nominees',   totalNoms);
-  el('stat-voters',     totalVoters);
-  el('stat-voted',      `${voted}/${totalCats}`);
-}
-
-/* ══════════════════════════════════════════════════════════
-   RESULTS PAGE
-══════════════════════════════════════════════════════════ */
-function initResultsSection() {
-  const cfg = getConfig();
-  const container = document.getElementById('resultsGrid');
-  if (!container) return;
-
-  container.innerHTML = cfg.categories.map(cat => {
-    const tally   = getTallyForCategory(cat.id);
-    const total   = Object.values(tally).reduce((a, b) => a + b, 0);
-
-    const sorted = (cat.nominees || [])
-      .map(n => ({ ...n, votes: tally[n.id] || 0 }))
-      .sort((a, b) => b.votes - a.votes);
-
-    const rows = sorted.slice(0, 3).map((n, i) => {
-      const pct = total > 0 ? Math.round((n.votes / total) * 100) : 0;
-      return `<div class="result-row">
-        <span class="result-rank rank-${i+1}">${['🥇','🥈','🥉'][i]}</span>
-        <div class="result-bar-wrap">
-          <div class="result-name">${escapeHtml(n.name)}</div>
-          <div class="result-bar-bg">
-            <div class="result-bar-fill" style="width:${pct}%"></div>
-          </div>
-        </div>
-        <span class="result-count">${n.votes}</span>
-      </div>`;
-    }).join('');
-
-    return `<div class="result-card">
-      <div class="result-category">${cat.icon || '🎡'} ${escapeHtml(cat.name)}</div>
-      ${rows || '<p style="font-size:0.8rem;color:var(--text-dim)">No votes yet</p>'}
-      <div style="margin-top:0.8rem;font-size:0.7rem;color:var(--text-dim);">${total} vote${total !== 1 ? 's' : ''} total</div>
-    </div>`;
-  }).join('');
-}
-
-/* ══════════════════════════════════════════════════════════
-   SETTINGS PAGE LOGIC
-══════════════════════════════════════════════════════════ */
-function initSettingsPage() {
-  loadGeneralSettings();
-  renderParksSettings();
-  renderCategoriesSettings();
-  bindSettingsTabs();
-  bindPasswordForm();
-}
-
-/* ── Settings Tabs ───────────────────────────────────────── */
-function bindSettingsTabs() {
-  document.querySelectorAll('.stab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      document.querySelectorAll('.stab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.stab-panel').forEach(p => p.classList.remove('active'));
-      tab.classList.add('active');
-      const target = document.getElementById('stab-' + tab.dataset.tab);
-      if (target) target.classList.add('active');
+    const resp = await fetch(cfg.webhookUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
     });
-  });
-}
 
-/* ── General Settings ────────────────────────────────────── */
-function loadGeneralSettings() {
-  const cfg = getConfig();
-  const el = id => document.getElementById(id);
-  if (el('gs-site-name'))   el('gs-site-name').value   = cfg.siteName   || '';
-  if (el('gs-subtitle'))    el('gs-subtitle').value    = cfg.subtitle   || '';
-  if (el('gs-voting-open')) el('gs-voting-open').value = cfg.votingOpen ? 'open' : 'closed';
-}
-
-function saveGeneralSettings() {
-  const cfg = getConfig();
-  const el  = id => document.getElementById(id);
-  if (el('gs-site-name'))   cfg.siteName   = el('gs-site-name').value.trim();
-  if (el('gs-subtitle'))    cfg.subtitle   = el('gs-subtitle').value.trim();
-  if (el('gs-voting-open')) cfg.votingOpen = el('gs-voting-open').value === 'open';
-  saveConfig(cfg);
-  showSaveMsg('save-msg-general');
-}
-
-/* ── Password ────────────────────────────────────────────── */
-function bindPasswordForm() {
-  const btn = document.getElementById('btn-change-pw');
-  if (!btn) return;
-  btn.addEventListener('click', () => {
-    const current = document.getElementById('pw-current')?.value;
-    const newPw   = document.getElementById('pw-new')?.value;
-    const confirm = document.getElementById('pw-confirm')?.value;
-    const cfg     = getConfig();
-    const errEl   = document.getElementById('pw-error');
-
-    if (current !== cfg.password) {
-      if (errEl) { errEl.textContent = 'Current password is incorrect.'; errEl.classList.add('show'); } return;
-    }
-    if (!newPw || newPw.length < 4) {
-      if (errEl) { errEl.textContent = 'Password must be at least 4 characters.'; errEl.classList.add('show'); } return;
-    }
-    if (newPw !== confirm) {
-      if (errEl) { errEl.textContent = 'Passwords do not match.'; errEl.classList.add('show'); } return;
-    }
-    if (errEl) errEl.classList.remove('show');
-    cfg.password = newPw;
-    saveConfig(cfg);
-    ['pw-current','pw-new','pw-confirm'].forEach(id => { const e = document.getElementById(id); if (e) e.value = ''; });
-    showSaveMsg('save-msg-pw');
-  });
-}
-
-/* ── Parks ───────────────────────────────────────────────── */
-function renderParksSettings() {
-  const cfg = getConfig();
-  const container = document.getElementById('parks-list');
-  if (!container) return;
-
-  container.innerHTML = cfg.parks.length === 0
-    ? '<p style="color:var(--text-muted);font-size:0.85rem;">No parks added yet.</p>'
-    : cfg.parks.map(park => `
-        <div class="park-item" data-park-id="${park.id}">
-          <img class="park-item-img"
-               src="${escapeHtml(park.image || '')}"
-               alt="${escapeHtml(park.name)}"
-               onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\'><rect width=\\'100\\' height=\\'100\\' fill=\\'%230d1629\\'/></svg>'">
-          <div class="park-item-info">
-            <div class="park-item-name">${escapeHtml(park.name)}</div>
-            <div style="font-size:0.68rem;color:var(--text-dim);margin-bottom:6px;word-break:break-all;">${escapeHtml(park.image || 'No image')}</div>
-            <button class="btn-danger" onclick="removePark('${park.id}')">🗑 Remove</button>
-          </div>
-        </div>`).join('');
-}
-
-function addPark() {
-  const nameEl  = document.getElementById('new-park-name');
-  const imgEl   = document.getElementById('new-park-img');
-  const name    = nameEl?.value.trim();
-  const image   = imgEl?.value.trim();
-
-  if (!name) { alert('Please enter a park name.'); return; }
-
-  const cfg = getConfig();
-  cfg.parks.push({ id: 'park_' + Date.now(), name, image: image || '' });
-  saveConfig(cfg);
-  if (nameEl) nameEl.value = '';
-  if (imgEl)  imgEl.value  = '';
-  renderParksSettings();
-  showSaveMsg('save-msg-parks');
-}
-
-function removePark(parkId) {
-  if (!confirm('Remove this park? Nominees referencing this park will remain.')) return;
-  const cfg = getConfig();
-  cfg.parks = cfg.parks.filter(p => p.id !== parkId);
-  saveConfig(cfg);
-  renderParksSettings();
-}
-
-/* ── Categories ──────────────────────────────────────────── */
-function renderCategoriesSettings() {
-  const cfg = getConfig();
-  const container = document.getElementById('categories-list');
-  if (!container) return;
-
-  container.innerHTML = cfg.categories.map(cat => `
-    <div class="cat-item" id="catitem_${cat.id}">
-      <div class="cat-item-header" onclick="toggleCatItem('${cat.id}')">
-        <span class="cat-item-icon">${cat.icon || '🎡'}</span>
-        <span class="cat-item-name">${escapeHtml(cat.name)}</span>
-        <span class="cat-item-count">${(cat.nominees||[]).length} nominees</span>
-        <button class="btn-danger" style="margin-left:auto;margin-right:0.5rem;"
-          onclick="event.stopPropagation();removeCategory('${cat.id}')">🗑</button>
-        <span class="cat-item-toggle">▼</span>
-      </div>
-      <div class="cat-item-body">
-        <div style="display:grid;grid-template-columns:80px 1fr 1fr 1fr;gap:0.5rem;align-items:end;margin:1rem 0 0.8rem;">
-          <div>
-            <label class="s-label">Icon</label>
-            <input class="s-input" id="cat-icon-${cat.id}" value="${escapeHtml(cat.icon||'🎡')}" style="text-align:center;" maxlength="4">
-          </div>
-          <div style="grid-column:span 3">
-            <label class="s-label">Category Name</label>
-            <div style="display:flex;gap:0.5rem;">
-              <input class="s-input" id="cat-name-${cat.id}" value="${escapeHtml(cat.name)}">
-              <button class="btn-add" onclick="updateCategoryMeta('${cat.id}')">Save</button>
-            </div>
-          </div>
-        </div>
-        <span class="gold-line-full" style="margin-bottom:1rem;display:block;"></span>
-        <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:0.7rem;">Nominees</div>
-        <div class="nominee-list" id="nominees-${cat.id}">
-          ${renderNomineeItems(cat)}
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 2fr auto;gap:0.5rem;align-items:end;margin-top:1rem;">
-          <div>
-            <label class="s-label">Nominee Name</label>
-            <input class="s-input" id="nom-name-${cat.id}" placeholder="e.g. Thunder Dragon">
-          </div>
-          <div>
-            <label class="s-label">Park</label>
-            <input class="s-input" id="nom-park-${cat.id}" placeholder="Park name">
-          </div>
-          <div>
-            <label class="s-label">Image URL (optional)</label>
-            <input class="s-input" id="nom-img-${cat.id}" placeholder="https://...">
-          </div>
-          <div>
-            <button class="btn-add" onclick="addNominee('${cat.id}')">+ Add</button>
-          </div>
-        </div>
-      </div>
-    </div>`).join('');
-}
-
-function renderNomineeItems(cat) {
-  if (!cat.nominees || cat.nominees.length === 0) {
-    return '<p style="font-size:0.8rem;color:var(--text-dim);">No nominees yet.</p>';
-  }
-  return cat.nominees.map(n => `
-    <div class="nominee-item">
-      <div class="nominee-item-info">
-        <div class="nominee-item-name">${escapeHtml(n.name)}</div>
-        <div class="nominee-item-park">${escapeHtml(n.park)}</div>
-      </div>
-      ${n.image ? `<img src="${escapeHtml(n.image)}" style="width:40px;height:30px;object-fit:cover;border-radius:4px;" onerror="this.style.display='none'">` : ''}
-      <button class="btn-danger" onclick="removeNominee('${cat.id}','${n.id}')">🗑</button>
-    </div>`).join('');
-}
-
-function toggleCatItem(catId) {
-  const el = document.getElementById('catitem_' + catId);
-  if (el) el.classList.toggle('expanded');
-}
-
-function updateCategoryMeta(catId) {
-  const cfg  = getConfig();
-  const cat  = cfg.categories.find(c => c.id === catId);
-  if (!cat) return;
-  const nameEl = document.getElementById('cat-name-' + catId);
-  const iconEl = document.getElementById('cat-icon-' + catId);
-  if (nameEl) cat.name = nameEl.value.trim() || cat.name;
-  if (iconEl) cat.icon = iconEl.value.trim() || cat.icon;
-  saveConfig(cfg);
-  renderCategoriesSettings();
-  const item = document.getElementById('catitem_' + catId);
-  if (item) { item.classList.add('expanded'); }
-}
-
-function addNominee(catId) {
-  const nameEl = document.getElementById('nom-name-' + catId);
-  const parkEl = document.getElementById('nom-park-' + catId);
-  const imgEl  = document.getElementById('nom-img-'  + catId);
-  const name   = nameEl?.value.trim();
-  const park   = parkEl?.value.trim();
-  const img    = imgEl?.value.trim();
-
-  if (!name || !park) { alert('Please enter both a nominee name and park name.'); return; }
-
-  const cfg = getConfig();
-  const cat = cfg.categories.find(c => c.id === catId);
-  if (!cat) return;
-  if (!cat.nominees) cat.nominees = [];
-
-  cat.nominees.push({ id: 'n_' + Date.now(), name, park, image: img || '' });
-  saveConfig(cfg);
-  if (nameEl) nameEl.value = '';
-  if (parkEl) parkEl.value = '';
-  if (imgEl)  imgEl.value  = '';
-
-  const listEl = document.getElementById('nominees-' + catId);
-  if (listEl) listEl.innerHTML = renderNomineeItems(cat);
-
-  // update count badge
-  const countEl = document.querySelector(`#catitem_${catId} .cat-item-count`);
-  if (countEl) countEl.textContent = `${cat.nominees.length} nominees`;
-}
-
-function removeNominee(catId, nomineeId) {
-  const cfg = getConfig();
-  const cat = cfg.categories.find(c => c.id === catId);
-  if (!cat) return;
-  cat.nominees = (cat.nominees || []).filter(n => n.id !== nomineeId);
-  saveConfig(cfg);
-  const listEl = document.getElementById('nominees-' + catId);
-  if (listEl) listEl.innerHTML = renderNomineeItems(cat);
-  const countEl = document.querySelector(`#catitem_${catId} .cat-item-count`);
-  if (countEl) countEl.textContent = `${cat.nominees.length} nominees`;
-}
-
-function addCategory() {
-  const cfg = getConfig();
-  cfg.categories.push({
-    id:        'cat_' + Date.now(),
-    icon:      '🎡',
-    name:      'New Category',
-    nominees:  []
-  });
-  saveConfig(cfg);
-  renderCategoriesSettings();
-  // expand last
-  const items = document.querySelectorAll('.cat-item');
-  if (items.length) items[items.length - 1].classList.add('expanded');
-}
-
-function removeCategory(catId) {
-  if (!confirm('Remove this category and all its nominees?')) return;
-  const cfg = getConfig();
-  cfg.categories = cfg.categories.filter(c => c.id !== catId);
-  saveConfig(cfg);
-  renderCategoriesSettings();
-}
-
-/* ── Reset Votes ─────────────────────────────────────────── */
-function resetAllVotes() {
-  if (!confirm('⚠️ This will permanently delete ALL votes. Continue?')) return;
-  localStorage.removeItem(STORAGE_KEYS.votes);
-  localStorage.removeItem(STORAGE_KEYS.voter);
-  alert('All votes have been reset.');
-}
-
-function resetToDefaults() {
-  if (!confirm('⚠️ This will reset ALL settings to defaults and clear all votes. Continue?')) return;
-  localStorage.removeItem(STORAGE_KEYS.config);
-  localStorage.removeItem(STORAGE_KEYS.votes);
-  localStorage.removeItem(STORAGE_KEYS.voter);
-  location.reload();
-}
-
-/* ── Save Feedback ───────────────────────────────────────── */
-function showSaveMsg(id) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), 2500);
-}
-
-/* ══════════════════════════════════════════════════════════
-   PASSWORD MODAL (index.html → settings.html)
-══════════════════════════════════════════════════════════ */
-function initPasswordModal() {
-  const overlay = document.getElementById('pwModal');
-  const input   = document.getElementById('pwInput');
-  const errEl   = document.getElementById('pwError');
-
-  document.getElementById('openSettingsBtn')?.addEventListener('click', () => {
-    overlay?.classList.add('open');
-    setTimeout(() => input?.focus(), 300);
-  });
-
-  document.getElementById('pwCancelBtn')?.addEventListener('click', () => {
-    overlay?.classList.remove('open');
-    if (input) input.value = '';
-    errEl?.classList.remove('show');
-  });
-
-  document.getElementById('pwSubmitBtn')?.addEventListener('click', () => {
-    const cfg = getConfig();
-    if (input?.value === cfg.password) {
-      sessionStorage.setItem('psa_auth', '1');
-      window.location.href = 'settings.html';
+    if (resp.ok || resp.status === 204) {
+      markVoted();
+      showScreen('thanks');
     } else {
-      input?.classList.add('error');
-      if (errEl) errEl.classList.add('show');
-      setTimeout(() => { input?.classList.remove('error'); errEl?.classList.remove('show'); }, 2000);
+      throw new Error(`HTTP ${resp.status}`);
     }
-  });
-
-  input?.addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('pwSubmitBtn')?.click(); });
-}
-
-/* ── Guard for Settings Page ─────────────────────────────── */
-function guardSettings() {
-  if (window.location.pathname.includes('settings') && sessionStorage.getItem('psa_auth') !== '1') {
-    window.location.href = 'index.html';
+  } catch (err) {
+    console.error('Webhook error:', err);
+    // Even on error, we still mark as voted and show thanks
+    // (prevents double-submission attempts)
+    markVoted();
+    showScreen('thanks');
   }
 }
 
-/* ══════════════════════════════════════════════════════════
+/* ================================================================
    UTILITY
-══════════════════════════════════════════════════════════ */
-function escapeHtml(str) {
+   ================================================================ */
+function esc(str) {
   if (!str) return '';
   return String(str)
     .replace(/&/g, '&amp;')
@@ -723,28 +433,20 @@ function escapeHtml(str) {
     .replace(/'/g, '&#39;');
 }
 
-function generateId(prefix) {
-  return prefix + '_' + Math.random().toString(36).substr(2, 8);
-}
+/* ================================================================
+   BOOT
+   ================================================================ */
+document.addEventListener('DOMContentLoaded', () => {
+  // Wire nav buttons
+  document.getElementById('btn-back')?.addEventListener('click', goBack);
+  document.getElementById('btn-next')?.addEventListener('click', goNext);
+  document.getElementById('btn-skip')?.addEventListener('click', skipCurrent);
+  document.getElementById('btn-submit')?.addEventListener('click', submitVotes);
+  document.getElementById('btn-review-back')?.addEventListener('click', () => {
+    showScreen('voting');
+    renderStep();
+  });
 
-/* ══════════════════════════════════════════════════════════
-   EXPORT GLOBALS (called from HTML)
-══════════════════════════════════════════════════════════ */
-window.PSA = {
-  initVotingPage,
-  initResultsSection,
-  initSettingsPage,
-  initPasswordModal,
-  guardSettings,
-  addPark,
-  removePark,
-  addCategory,
-  removeCategory,
-  addNominee,
-  removeNominee,
-  toggleCatItem,
-  updateCategoryMeta,
-  saveGeneralSettings,
-  resetAllVotes,
-  resetToDefaults
-};
+  // Init the right screen
+  initIntro();
+});
