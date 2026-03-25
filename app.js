@@ -129,9 +129,7 @@ const DEFAULT_CONFIG = {
     {
       id: 'cat_overall', icon: 'trophy', name: 'Best Park Overall',
       options: [
-        { id: 'o31', name: 'Dreamland Resort', description: 'by Player123',   image: '' },
-        { id: 'o32', name: 'Neon Valley Park', description: 'by PlayerXYZ',   image: '' },
-        { id: 'o33', name: 'Crystal Kingdom',  description: 'by CrystalBuild', image: '' },
+        { id: 'o31', name: 'Sunfield', description: '',   image: '' },
       ]
     },
     {
